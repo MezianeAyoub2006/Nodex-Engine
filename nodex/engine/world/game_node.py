@@ -1,5 +1,6 @@
 from operator import attrgetter 
 from dataclasses import dataclass 
+import nodex
 
 @dataclass
 class Flags:
@@ -9,7 +10,7 @@ class Flags:
 
 class GameNode:
     _id:int = 0
-    def __init__(self, context):
+    def __init__(self, context : "nodex.Context"):
         self.context = context 
         self.children = set()
         self.order = 0

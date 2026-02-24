@@ -4,114 +4,43 @@ import math
 
 
 class Test(nodex.engine.GameNode):
-    """
-    Render and update hooks container, used for organization purposes.
-    """
     def __init__(self, context:"nodex.engine.Context"):
         super().__init__(context)
         self._fonts = {}
+        self.ground = nodex.WorldLayer(context) 
         with open("shaders/outline.glsl", "r", encoding = "utf-8") as f:
-            self.hud = nodex.engine.PygameLayer(context, f.read()) 
-        with open("shaders/mode7.glsl", "r", encoding = "utf-8") as f:
-            self.ground = nodex.engine.ShaderPass(context, f.read()) 
-        self.ground.load_texture("tex", "assets/ground.png", 0)
-        self.ground.load_texture("tex_infinite", "assets/ground-infinite.png", 1)
-      
-        self.init_player_data() 
-
-    def init_player_data(self) -> None:
-        self.player_x = 0.5
-        self.player_y = 0
-        self.player_z = 3
-        self.player_angle = 0
-        self.horizon = 0.3
-
-    def update(self) -> None:
-        """
-        Updating hook.
-        """
-        self.player_movement()
-        pygame.display.set_caption(f"Nodex-Engine")
-        self.set_uniforms()
-  
-    def render(self) -> None:
-        """
-        Rendering hook.
-        """
-        self.render_hud()    
+            self.overlay = nodex.PygameLayer(context, f.read()) 
+        self.ground_surf = pygame.image.load("assets/ground.png")
+        self.font = pygame.font.SysFont("consolas", 16, True) 
+       
+    def update(self): 
+        self.ground.draw(self.ground_surf, (0, 0))
+        self.overlay.blit(self.font.render(f"{round(self.context.fps)} FPS", False, (255, 255, 255)), (5, 5))
         self.ground.render()
-        self.hud.render()
-    
-    def player_movement(self) -> None:
-        """
-        Handles player movements.
-        """
-        dx, dy = 0, 0
-        if pygame.key.get_pressed()[pygame.K_LEFT]:
-            self.horizon -= 0.01 * self.context.dt
-        if pygame.key.get_pressed()[pygame.K_RIGHT]:
-            self.horizon += 0.01 * self.context.dt
-        if pygame.key.get_pressed()[pygame.K_z]:
-            dy += 0.0015 * self.context.dt
-        if pygame.key.get_pressed()[pygame.K_s]:
-            dy -= 0.0015 * self.context.dt
+        self.overlay.render()
+        speed = 3.0  
 
-        cos_a = math.cos(self.player_angle)
-        sin_a = math.sin(self.player_angle)
-        self.player_x += dx * cos_a - dy * sin_a
-        self.player_y += dx * sin_a + dy * cos_a
+        if self.context.active_keys[pygame.K_RIGHT]:
+            self.ground.camera.position.x += math.cos(self.ground.camera.rotation) * speed * self.context.dt
+            self.ground.camera.position.y += math.sin(self.ground.camera.rotation) * speed * self.context.dt
+        if self.context.active_keys[pygame.K_LEFT]:
+            self.ground.camera.position.x -= math.cos(self.ground.camera.rotation) * speed * self.context.dt
+            self.ground.camera.position.y -= math.sin(self.ground.camera.rotation) * speed * self.context.dt
+        if self.context.active_keys[pygame.K_DOWN]:
+            self.ground.camera.position.x -= math.sin(self.ground.camera.rotation) * speed * self.context.dt
+            self.ground.camera.position.y += math.cos(self.ground.camera.rotation) * speed * self.context.dt
+        if self.context.active_keys[pygame.K_UP]:
+            self.ground.camera.position.x += math.sin(self.ground.camera.rotation) * speed * self.context.dt
+            self.ground.camera.position.y -= math.cos(self.ground.camera.rotation) * speed * self.context.dt
+        if self.context.active_keys[pygame.K_z]:
+            self.ground.camera.zoom *= 1.03 ** self.context.dt
+        if self.context.active_keys[pygame.K_s]:
+            self.ground.camera.zoom /= 1.03 ** self.context.dt
+        if self.context.active_keys[pygame.K_q]:
+            self.ground.camera.rotation += self.context.dt/60
+        if self.context.active_keys[pygame.K_d]:
+            self.ground.camera.rotation -= self.context.dt/60
 
-        if pygame.key.get_pressed()[pygame.K_UP]:
-            self.player_z += 0.02 * self.context.dt
-        if pygame.key.get_pressed()[pygame.K_DOWN]:
-            self.player_z -= 0.02 * self.context.dt
-        if pygame.key.get_pressed()[pygame.K_d]:
-            self.player_angle -= 0.02 * self.context.dt
-        if pygame.key.get_pressed()[pygame.K_q]:
-            self.player_angle += 0.02 * self.context.dt
-
-    def set_uniforms(self) -> None:
-        """ 
-        Sets the uniforms of the ground ShaderPass layer.
-        """
-        self.ground.set_uniform("player_x", self.player_x)
-        self.ground.set_uniform("player_y", self.player_y)
-        self.ground.set_uniform("player_z", self.player_z)
-        self.ground.set_uniform("player_angle", self.player_angle)
-        self.ground.set_uniform("tex_infinite_scale", 9)
-        self.ground.set_uniform("horizon_height", self.horizon)
-
-    def render_hud(self) -> None:
-        """ 
-        Renders the HUD, in pygame.
-        x, y, z positions are rendered 100 times larger 
-        for uniformity purposes.
-        """
-        self.render_text("NODEX-ENGINE", 20, (40, 10))
-        self.render_text(f"x : {round(self.player_x * 100, 1)}", 10, (10, 160))
-        self.render_text(f"y : {round(self.player_y * 100, 1)}", 10, (10, 175))
-        self.render_text(f"z : {round(self.player_z * 100, 1)}", 10, (10, 190))
-        self.render_text(f"angle : {round(math.degrees(self.player_angle), 1)}", 10, (10, 205))
-        self.render_text(f"horizon : {round(self.horizon, 1)}", 10, (10, 220))
-        self.render_text(f"fps : {round(self.context.fps, 1)}", 10, (170, 220))
-
-    def render_text(self, text:str, size:tuple, position:tuple, color:tuple = (255, 255, 255)):
-        """ 
-        Renders a text.
-        """
-        surf = self._get_font(size).render(text, False, color)
-        self.hud.blit(surf, position)
-
-    def _get_font(self, size:tuple, bold:bool = True):
-        """ 
-        SysFont caching method.
-        """
-        key = (size, bold)
-        if key not in self._fonts:
-            self._fonts[key] = pygame.font.SysFont("lucidaconsole", size, bold)
-        return self._fonts[key]
-  
-        
 
 context = nodex.engine.Context((250, 240), 2, False) 
 context.add_game_node(Test(context))

@@ -3,13 +3,14 @@ from .shader_pass import ShaderPass
 import pygame
 import moderngl
 
+
 class PygameLayer(ShaderPass):
     """ 
     Small abstraction over ShaderPass, used to handle pygame graphics.
     """
-    def __init__(self, context, frag_prog = None):
+    def __init__(self, context, frag_prog = None, vert_prog = None):
         self._surf = pygame.Surface(context.internal_size, pygame.SRCALPHA)
-        super().__init__(context, frag_prog)
+        super().__init__(context, frag_prog, vert_prog)
         tex = context.gl_context._gl_ctx.texture(context.internal_size, 4)
         tex.filter = (moderngl.NEAREST, moderngl.NEAREST)
         self.textures["tex"] = (tex, 0)

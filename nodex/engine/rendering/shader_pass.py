@@ -50,13 +50,13 @@ def pixels_to_ndc(ox:int, oy:int, sw:int, sh:int, W:int, H:int) -> tuple:
     return x1, y1, x2, y2
 
 class ShaderPass:
-    def __init__(self, context : "nodex.engine.Context", frag_prog:str = None):
+    def __init__(self, context : "nodex.engine.Context", frag_prog:str = None, vert_prog:str = None):
         self.context = context
         self.textures = {}   
         self.uniforms = {}   
         self.shader_prog = context.gl_context._gl_ctx.program(
-            vertex_shader=PASSTHROUGH_VERT,
-            fragment_shader=frag_prog or PASSTHROUGH_FRAG
+            vertex_shader = vert_prog or PASSTHROUGH_VERT,
+            fragment_shader = frag_prog or PASSTHROUGH_FRAG
         )
         self._vbo = context.gl_context._gl_ctx.buffer(make_quad(-1, -1, 1, 1).tobytes(), dynamic=True)
         self._vao = context.gl_context._gl_ctx.vertex_array(self.shader_prog, [(self._vbo, '2f 2f', 'in_pos', 'in_uv')])

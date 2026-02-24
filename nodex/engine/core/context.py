@@ -16,6 +16,7 @@ class Context:
         self.gl_context = nodex.engine.GlContext(self)
         self.gl_context.init_shader_pass()
         self.scene_manager = nodex.engine.SceneManger(self)
+        self.timer = 0
 
     def add_game_node(self, game_node, scene=None):
         self.scene_manager.add_game_node(game_node, scene)
@@ -29,6 +30,21 @@ class Context:
 
     def toggle_fullscreen(self):
         self.window.toggle_fullscreen()
+
+    def set_caption(self, caption):
+        pygame.display.set_caption(caption)
+
+    @property 
+    def active_keys(self):
+        return self.runtime.active_keys 
+    
+    @property 
+    def released_keys(self): 
+        return self.runtime.released_keys 
+    
+    @property 
+    def pressed_keys(self):
+        return self.runtime.pressed_keys
 
     @property 
     def dt(self):
