@@ -9,11 +9,11 @@ class Test(nodex.engine.GameNode):
         self.ground = nodex.WorldLayer(context) 
         with open("shaders/outline.glsl", "r", encoding = "utf-8") as f:
             self.overlay = nodex.PygameLayer(context, f.read()) 
-        self.ground_surf = pygame.image.load("assets/ground.png")
+        nodex.engine.sprites.load_single_image("ground", "assets/ground.png")
         self.font = pygame.font.SysFont("consolas", 16, True) 
        
     def update(self): 
-        self.ground.draw(self.ground_surf, (0, 0))
+        self.ground.draw(nodex.engine.sprites.get_frame_of_sprite("ground", 0).surface, (0, 0))
         self.overlay.blit(self.font.render(f"{round(self.context.fps)} FPS", False, (255, 255, 255)), (5, 5))
         self.ground.render()
         self.overlay.render()
@@ -39,7 +39,6 @@ class Test(nodex.engine.GameNode):
             self.ground.camera.rotation += 30 * self.context.dt
         if self.context.active_keys[pygame.K_d]:
             self.ground.camera.rotation -= 30 * self.context.dt
-
 
 context = nodex.engine.Context((250, 240), 2, True) 
 context.add_game_node(Test(context))
