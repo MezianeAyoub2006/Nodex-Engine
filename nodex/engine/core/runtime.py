@@ -14,7 +14,7 @@ class Runtime:
 
     def run(self):
         while True: 
-            self._handle_keyboard()
+            self.context.input._handle_keyboard()
             self.context.input._handle_keyboard()
             self.context.system.poll_events()
             self.context.gl_context.before_rendering() 
