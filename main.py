@@ -2,7 +2,6 @@ import nodex.engine
 import pygame 
 import math
 
-
 class Test(nodex.engine.GameNode):
     def __init__(self, context:"nodex.engine.Context"):
         super().__init__(context)
@@ -18,7 +17,7 @@ class Test(nodex.engine.GameNode):
         self.overlay.blit(self.font.render(f"{round(self.context.fps)} FPS", False, (255, 255, 255)), (5, 5))
         self.ground.render()
         self.overlay.render()
-        speed = 3.0  
+        speed = 500
 
         if self.context.active_keys[pygame.K_RIGHT]:
             self.ground.camera.position.x += math.cos(self.ground.camera.rotation) * speed * self.context.dt
@@ -33,13 +32,13 @@ class Test(nodex.engine.GameNode):
             self.ground.camera.position.x += math.sin(self.ground.camera.rotation) * speed * self.context.dt
             self.ground.camera.position.y -= math.cos(self.ground.camera.rotation) * speed * self.context.dt
         if self.context.active_keys[pygame.K_z]:
-            self.ground.camera.zoom *= 1.03 ** self.context.dt
+            self.ground.camera.zoom *= 5 ** self.context.dt
         if self.context.active_keys[pygame.K_s]:
-            self.ground.camera.zoom /= 1.03 ** self.context.dt
+            self.ground.camera.zoom /= 5 ** self.context.dt
         if self.context.active_keys[pygame.K_q]:
-            self.ground.camera.rotation += self.context.dt/60
+            self.ground.camera.rotation += 30 * self.context.dt
         if self.context.active_keys[pygame.K_d]:
-            self.ground.camera.rotation -= self.context.dt/60
+            self.ground.camera.rotation -= 30 * self.context.dt
 
 
 context = nodex.engine.Context((250, 240), 2, False) 
