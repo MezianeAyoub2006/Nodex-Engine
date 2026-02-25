@@ -5,6 +5,9 @@ import nodex.engine
 from .system import System
 from .runtime import Runtime 
 from .event_bus import EventBus
+from .input import Input
+from .window import Window
+from .gl_context import GlContext 
 
 class Context:
     def __init__(self, resolution, window_scale = 1, vsync = True):
@@ -12,10 +15,11 @@ class Context:
         self.event_bus = EventBus()
         self.runtime = Runtime(self)
         self.system = System(self)
-        self.window = nodex.engine.Window(self, resolution, window_scale, vsync)
-        self.gl_context = nodex.engine.GlContext(self)
+        self.window = Window(self, resolution, window_scale, vsync)
+        self.gl_context = GlContext(self)
         self.gl_context.init_shader_pass()
         self.scene_manager = nodex.engine.SceneManger(self)
+        self.input = Input(self)
         self.timer = 0
 
     def add_game_node(self, game_node, scene=None):
@@ -36,15 +40,15 @@ class Context:
 
     @property 
     def active_keys(self):
-        return self.runtime.active_keys 
+        return self.input.active_keys 
     
     @property 
     def released_keys(self): 
-        return self.runtime.released_keys 
+        return self.input.released_keys 
     
     @property 
     def pressed_keys(self):
-        return self.runtime.pressed_keys
+        return self.input.pressed_keys
 
     @property 
     def dt(self):
@@ -57,3 +61,11 @@ class Context:
     @property 
     def internal_size(self):
         return self.window.internal_size
+    
+    @property
+    def mouse_position(self):
+        return self.input.mouse_position 
+    
+    @property 
+    def window_scale(self):
+        return self.window.window_scale

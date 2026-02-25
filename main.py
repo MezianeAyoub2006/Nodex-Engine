@@ -41,6 +41,6 @@ class Test(nodex.engine.GameNode):
             self.ground.camera.rotation -= 30 * self.context.dt
 
 
-context = nodex.engine.Context((250, 240), 2, False) 
+context = nodex.engine.Context((250, 240), 2, True) 
 context.add_game_node(Test(context))
 context.run()

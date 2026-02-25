@@ -12,26 +12,10 @@ class Runtime:
         self._clock = pygame.time.Clock()
         self._dt = 1
 
-    def _handle_keyboard(self):
-        self._active_keys = pygame.key.get_pressed() 
-        self._pressed_keys = pygame.key.get_just_pressed()
-        self._released_keys = pygame.key.get_just_released() 
-
-    @property 
-    def active_keys(self):
-        return self._active_keys 
-
-    @property
-    def pressed_keys(self):
-        return self._pressed_keys 
-    
-    @property 
-    def released_keys(self):
-        return self._released_keys
-
     def run(self):
         while True: 
             self._handle_keyboard()
+            self.context.input._handle_keyboard()
             self.context.system.poll_events()
             self.context.gl_context.before_rendering() 
             self.context.scene_manager.update()

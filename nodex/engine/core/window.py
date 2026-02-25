@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ..core.context import Context
+    from .context import Context
 
 import pygame 
 
@@ -66,3 +66,7 @@ class Window:
     @property
     def internal_size(self) -> tuple:
         return self._internal_size
+    
+    @property 
+    def window_scale(self):
+        return self._window_scale 
