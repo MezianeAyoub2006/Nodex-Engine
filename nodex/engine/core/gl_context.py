@@ -1,9 +1,13 @@
 import moderngl
-import nodex.engine 
-from .shader_pass import ShaderPass
+import nodex
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .context import Context
     
+
 class GlContext:
-    def __init__(self, context : "nodex.engine.Context"):
+    def __init__(self, context : "Context"):
         self.context = context 
         self._gl_ctx = moderngl.create_context()
         self._gl_ctx.enable(moderngl.BLEND)
@@ -13,7 +17,7 @@ class GlContext:
         self._render_fbo = self._gl_ctx.framebuffer(color_attachments=[self._render_tex])
 
     def init_shader_pass(self):
-        self._blit_pass = ShaderPass(self.context)
+        self._blit_pass = nodex.rendering.ShaderPass(self.context)
         self._blit_pass.textures["tex"] = (self._render_tex, 0)
 
     def before_rendering(self):

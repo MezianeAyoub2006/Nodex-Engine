@@ -21,27 +21,27 @@ class Test(nodex.engine.GameNode):
         speed = 3.0  
 
         if self.context.active_keys[pygame.K_RIGHT]:
-            self.ground.camera.position.x += math.cos(self.ground.camera.rotation) * speed * self.context.dt
-            self.ground.camera.position.y += math.sin(self.ground.camera.rotation) * speed * self.context.dt
+            self.ground.camera.position.x += math.cos(self.ground.camera.rotation) * speed * self.context.dt * 60
+            self.ground.camera.position.y += math.sin(self.ground.camera.rotation) * speed * self.context.dt * 60
         if self.context.active_keys[pygame.K_LEFT]:
-            self.ground.camera.position.x -= math.cos(self.ground.camera.rotation) * speed * self.context.dt
-            self.ground.camera.position.y -= math.sin(self.ground.camera.rotation) * speed * self.context.dt
+            self.ground.camera.position.x -= math.cos(self.ground.camera.rotation) * speed * self.context.dt * 60
+            self.ground.camera.position.y -= math.sin(self.ground.camera.rotation) * speed * self.context.dt * 60
         if self.context.active_keys[pygame.K_DOWN]:
-            self.ground.camera.position.x -= math.sin(self.ground.camera.rotation) * speed * self.context.dt
-            self.ground.camera.position.y += math.cos(self.ground.camera.rotation) * speed * self.context.dt
+            self.ground.camera.position.x -= math.sin(self.ground.camera.rotation) * speed * self.context.dt * 60
+            self.ground.camera.position.y += math.cos(self.ground.camera.rotation) * speed * self.context.dt * 60
         if self.context.active_keys[pygame.K_UP]:
-            self.ground.camera.position.x += math.sin(self.ground.camera.rotation) * speed * self.context.dt
-            self.ground.camera.position.y -= math.cos(self.ground.camera.rotation) * speed * self.context.dt
+            self.ground.camera.position.x += math.sin(self.ground.camera.rotation) * speed * self.context.dt * 60
+            self.ground.camera.position.y -= math.cos(self.ground.camera.rotation) * speed * self.context.dt * 60
         if self.context.active_keys[pygame.K_z]:
-            self.ground.camera.zoom *= 1.03 ** self.context.dt
+            self.ground.camera.zoom *= 1.03 ** (self.context.dt * 60)
         if self.context.active_keys[pygame.K_s]:
-            self.ground.camera.zoom /= 1.03 ** self.context.dt
+            self.ground.camera.zoom /= 1.03 ** (self.context.dt * 60)
         if self.context.active_keys[pygame.K_q]:
-            self.ground.camera.rotation += self.context.dt/60
+            self.ground.camera.rotation += self.context.dt 
         if self.context.active_keys[pygame.K_d]:
-            self.ground.camera.rotation -= self.context.dt/60
+            self.ground.camera.rotation -= self.context.dt 
 
 
-context = nodex.engine.Context((250, 240), 2, False) 
+context = nodex.engine.Context((250, 240), 2, True) 
 context.add_game_node(Test(context))
 context.run()
