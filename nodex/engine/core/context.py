@@ -8,6 +8,8 @@ from .event_bus import EventBus
 from .input import Input
 from .window import Window
 from .gl_context import GlContext 
+from .sounds import SoundLoader
+from .mixer import Mixer, DynamicMixer
 
 class Context:
     def __init__(self, resolution, window_scale = 1, vsync = True):
@@ -20,6 +22,9 @@ class Context:
         self.gl_context.init_shader_pass()
         self.scene_manager = nodex.engine.SceneManger(self)
         self.input = Input(self)
+        self.sound_loader = SoundLoader(self)
+        self.mixer = Mixer(self, 16, 1)
+        self.dynamic_mixer = DynamicMixer(self, self.mixer, 320)
         self.timer = 0
 
     def add_game_node(self, game_node, scene=None):

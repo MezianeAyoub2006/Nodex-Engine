@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .context import Context
 
-
 class Input:
     def __init__(self, context : "Context"):
         self.context = context 

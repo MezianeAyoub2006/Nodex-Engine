@@ -20,6 +20,7 @@ class Runtime:
             self.context.gl_context.before_rendering() 
             self.context.scene_manager.update()
             self.context.gl_context.after_rendering()
+            self.context.mixer.update()
             pygame.display.flip()
             self._dt = self._clock.tick(1000) / 10000
             self.context.timer += 1000 * self._dt
