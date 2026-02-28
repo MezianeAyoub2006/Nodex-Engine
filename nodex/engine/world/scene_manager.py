@@ -14,3 +14,7 @@ class SceneManger:
             self.scenes[scene].nodes.add(game_node)
         else:
             self.scenes[self.current_scene].nodes.add(game_node)
+        game_node.load()
+    
+    def switch_scene(self, scene):
+        self.current_scene = scene

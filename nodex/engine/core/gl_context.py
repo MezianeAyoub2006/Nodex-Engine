@@ -17,7 +17,7 @@ class GlContext:
         self._render_fbo = self._gl_ctx.framebuffer(color_attachments=[self._render_tex])
 
     def init_shader_pass(self):
-        self._blit_pass = nodex.rendering.ShaderPass(self.context)
+        self._blit_pass = nodex.ShaderPass(self.context)
         self._blit_pass.textures["tex"] = (self._render_tex, 0)
 
     def before_rendering(self):

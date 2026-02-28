@@ -11,7 +11,6 @@ class Window:
         self._internal_size = internal_size
         self._window_scale = window_scale
         self._vsync = vsync
-        print(self._vsync)
         info = pygame.display.Info()
         self.screen_size = (info.current_w, info.current_h) 
         self.screen = self.create_screen(self._window_scale, self._vsync)

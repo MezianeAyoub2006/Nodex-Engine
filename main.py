@@ -2,7 +2,6 @@ import nodex.engine
 import pygame 
 import math
 
-
 class Test(nodex.engine.GameNode):
     def __init__(self, context:"nodex.engine.Context"):
         super().__init__(context)
@@ -10,20 +9,26 @@ class Test(nodex.engine.GameNode):
         self.ground = nodex.WorldLayer(context) 
         with open("shaders/outline.glsl", "r", encoding = "utf-8") as f:
             self.overlay = nodex.PygameLayer(context, f.read()) 
-        self.ground_surf = pygame.image.load("assets/ground.png")
+        self.context.load_image("ground", "assets/ground.png")
         self.font = pygame.font.SysFont("consolas", 16, True) 
+        self.context.load_sound("test", "assets/test.wav")
+        self.sound = self.context.get_sound("test")
+        self.sound.play(0.5)
        
     def update(self): 
-        self.ground.draw(self.ground_surf, (0, 0))
+        self.ground.draw(self.context.get_image("ground"), (0, 0))
         self.overlay.blit(self.font.render(f"{round(self.context.fps)} FPS", False, (255, 255, 255)), (5, 5))
         self.ground.render()
         self.overlay.render()
         speed = 3.0  
+        self.sound.update()
 
         if self.context.active_keys[pygame.K_RIGHT]:
+            self.sound.pause()
             self.ground.camera.position.x += math.cos(self.ground.camera.rotation) * speed * self.context.dt * 60
             self.ground.camera.position.y += math.sin(self.ground.camera.rotation) * speed * self.context.dt * 60
         if self.context.active_keys[pygame.K_LEFT]:
+            self.sound.resume()
             self.ground.camera.position.x -= math.cos(self.ground.camera.rotation) * speed * self.context.dt * 60
             self.ground.camera.position.y -= math.sin(self.ground.camera.rotation) * speed * self.context.dt * 60
         if self.context.active_keys[pygame.K_DOWN]:
@@ -42,6 +47,6 @@ class Test(nodex.engine.GameNode):
             self.ground.camera.rotation -= self.context.dt 
 
 
-context = nodex.engine.Context((250, 240), 2, True) 
+context = nodex.engine.Context((250, 240), 2, False) 
 context.add_game_node(Test(context))
 context.run()
