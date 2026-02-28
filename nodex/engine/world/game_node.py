@@ -7,6 +7,7 @@ class Flags:
     update:bool = True 
     render:bool = True 
     propagate:bool = True 
+    alive:bool = True
 
 class GameNode:
     _id:int = 0
@@ -23,6 +24,9 @@ class GameNode:
 
     def render(self):
         pass 
+
+    def load(self):
+        pass
 
     def update_all(self): 
         if self.flags.update:
