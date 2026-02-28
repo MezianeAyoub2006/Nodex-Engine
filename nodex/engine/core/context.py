@@ -22,7 +22,7 @@ class Context:
         self.scene_manager = nodex.engine.world.SceneManger(self)
         self.input = Input(self)
         self.assets_manager = AssetsManager(self)
-        self.sound_manager = nodex.engine.sound.SoundManager(self)
+        self.sound_manager = nodex.engine.sounds.SoundManager(self)
         self.timer = 0
         self.loading_node = loading_node
 

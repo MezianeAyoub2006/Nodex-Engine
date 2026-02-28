@@ -1,13 +1,10 @@
 import pygame
 import nodex
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from .sound import Sound
+from .sound import Sound
 
 
 
-class SoundManager:
+class SoundLoader:
     def __init__(self, context:"nodex.Context"):
         self.context = context
         self.sounds:dict[str, Sound] = {}
@@ -20,3 +17,5 @@ class SoundManager:
             return self.sounds.get(name).copy()
         else:
             return self.sounds.get(name)
+        
+

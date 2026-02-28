@@ -12,8 +12,10 @@ class Test(nodex.engine.GameNode):
         self.context.load_image("ground", "assets/ground.png")
         self.font = pygame.font.SysFont("consolas", 16, True) 
         self.context.load_sound("test", "assets/test.wav")
-        self.sound = self.context.get_sound("test")
-        self.sound.play(0.5)
+        self.sound = self.context.sound_manager.track("test") 
+        
+        self.sound.play(1)
+
        
     def update(self): 
         self.ground.draw(self.context.get_image("ground"), (0, 0))
@@ -21,14 +23,14 @@ class Test(nodex.engine.GameNode):
         self.ground.render()
         self.overlay.render()
         speed = 3.0  
-        self.sound.update()
 
+        
         if self.context.active_keys[pygame.K_RIGHT]:
-            self.sound.pause()
+            
             self.ground.camera.position.x += math.cos(self.ground.camera.rotation) * speed * self.context.dt * 60
             self.ground.camera.position.y += math.sin(self.ground.camera.rotation) * speed * self.context.dt * 60
         if self.context.active_keys[pygame.K_LEFT]:
-            self.sound.resume()
+          
             self.ground.camera.position.x -= math.cos(self.ground.camera.rotation) * speed * self.context.dt * 60
             self.ground.camera.position.y -= math.sin(self.ground.camera.rotation) * speed * self.context.dt * 60
         if self.context.active_keys[pygame.K_DOWN]:
