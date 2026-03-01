@@ -22,13 +22,16 @@ class Runtime:
         while True: 
             self.context.input._handle_keyboard()
             self._delta_time()
+            self.context.scenes._update()
             self.context.system.poll_events()
-            self.context.gl_context.before_rendering() 
-            self.context.scene_manager.update()
-            self.context.gl_context.after_rendering()
+            self.context._gl_context.before_rendering() 
+            self.context.renderer.render()
+            self.context._gl_context.after_rendering()
+
             pygame.display.flip() 
             self._clock.tick(1000) 
             self.context.timer += self.dt 
+            self.context.renderer.clear()
         
 
     @property 
