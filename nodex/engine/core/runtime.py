@@ -15,14 +15,15 @@ class Runtime:
     def run(self):
         while True: 
             self.context.input._handle_keyboard()
-            self.context.input._handle_keyboard()
             self.context.system.poll_events()
-            self.context.gl_context.before_rendering() 
-            self.context.scene_manager.update()
-            self.context.gl_context.after_rendering()
+            self.context.scenes._update()
+            self.context._gl_context.before_rendering() 
+            self.context.renderer.render()
+            self.context._gl_context.after_rendering()
             pygame.display.flip()
-            self._dt = self._clock.tick(1000) / 10000
-            self.context.timer += 1000 * self._dt
+            self._dt = self._clock.tick(1000) / 1000
+            self.context.timer += self._dt
+            self.context.renderer.clear()
         
     @property 
     def dt(self):
