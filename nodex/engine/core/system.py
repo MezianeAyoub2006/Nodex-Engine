@@ -15,5 +15,5 @@ class System:
                 self.context.quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_F11:
-                    self.context.toggle_fullscreen()
+                    self.context.window.toggle_fullscreen()
                 
