@@ -1,5 +1,5 @@
-from .pygame_layer import PygameLayer
-from .camera import Camera
+from .pygame_pass import PygamePass
+from .camera2D import Camera2D
 
 WORLD_VERTEX = """ 
 #version 330
@@ -25,9 +25,9 @@ void main() {
 }
 """
 
-class WorldLayer(PygameLayer):
+class WorldPass(PygamePass):
     def __init__(self, context, frag_prog=None): 
-        self.camera = Camera()
+        self.camera = Camera2D()
         super().__init__(context, frag_prog, WORLD_VERTEX)
     
     def draw(self, surf, position):
