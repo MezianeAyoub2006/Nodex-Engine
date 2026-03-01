@@ -1,0 +1,65 @@
+Le mode 7 peut aussi être exploité, le rendu par couche
+est fait avec moderngl mais une abstraction pygame-ce
+permet de rendre tous les graphiques par un blit de surface
+intermédiare, la caméra n'est d'ailleurs pas géré par le 
+vertex mais coté CPU, sauf le zoom et la rotation qui sont
+des uniforms glsl qui permettent a moderngl de faire le rendu.
+pygame-ce joue donc le role central, le tout etant essentiellement
+des blits.
+
+Jeux ou le vertex shader joue volontairement un role
+dézoomer un layer crée une forme de carré, on 
+pourra paindre le fond (background animé)
+et potentiellement utiliser le vertex pour 
+faire un cube qui pourra changer d'environnement (par face)
+ça pourra être exploité pour faire une mécanique de gameplay
+pour chaque theme.
+
+Le moteur est structurée comme suit :
+Context est l'alocateur de services central, son module intègre 
+par compostions, tous les systèmes essentiels (GlContext, Runtime, EventBus, Window, Input, ...)
+au contexte, il a déjà cette fonction de centralisation.
+Ensuite, le contexte centralise l'API, il n'est pas vraiment un singelton
+mais une classe partagé a tous les objets qui en ont besoin, il accedent
+donc a toute l'api du moteur directement. (context.load_image, context.dt, context.internal_size, ...)
+Le contexte est ensuite passé a tous les GameNode, qui sont gérés par une scene, avec hooks (load, destroy, update, render, profile, ...)
+et le sceneManager gère tout ça avec le systeme de transition, timers et interpolation, uniforms glsl pour transitions
+graphiques complexes, effets CPU possible (circle, ...).
+
+
+La résolution est de (256, 240)
+
+
+
+pour le theme cyclique : 
+    cube qui a chaque cycle débloque une capacité
+    exploité dans un jeu de puzzle mais avec des malus
+    possibles pour faire un cycle ce qui ajouterais
+    une dimension stratégie, potentiellement système de mort
+    et mode arcade
+pour le theme givré : 
+    Jeu ou on controle un phoque, il se déplace sur chaque face
+    pour un objectif précis, s'armer contre les ours polaires 
+    qui rodent. Furtivité extrème ! Il faut progresser dans un
+    environnement hostile, les faces donnent du loop diférent
+    peuvent feature des mini boss, ..., le but est de débloquer
+    la face finale, une ile fertile qui regorge de poissons, une 
+    terre privée des ours polaires, c'est la fin, il a reussi.
+pour le theme holes : 
+    un jeu d'exploration spaciale utilisant un overlay pygame-ce
+    pour le cockpit, vue 1ere personne, instruments de bors réalistes 
+    le but est de traverser des trous de vers (d'ou holes), le mode 7
+    sera utilisé pour le sol, billoboard pour les objets 3D, parallaxe pour 
+    le fond, ...
+pour le theme vision : 
+    jeu de sniper utilisant le mode 7 et des techniques similaires a "holes"
+pour le theme network :
+    jeu ou le but est de s'enrichir a ne plus finir, la mécanique centrale est
+    le networking, ou faut impressioner ses cercles proches et acceder a de nouvelles
+    rencontres, ce jeu est une métaphore du capitalisme sur un décor monochrome aux graphismes
+    simples mais poignants, a la fin, on post process pour montrer une télé cathodique, 
+    "tout ceci n'est qu'un jeu, mais pas le notre" morale a la fin 
+
+
+
+

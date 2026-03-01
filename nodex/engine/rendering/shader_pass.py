@@ -54,12 +54,12 @@ class ShaderPass:
         self.context = context
         self.textures = {}   
         self.uniforms = {}   
-        self.shader_prog = context._gl_context._gl_ctx.program(
+        self.shader_prog = context.gl_context._gl_ctx.program(
             vertex_shader = vert_prog or PASSTHROUGH_VERT,
             fragment_shader = frag_prog or PASSTHROUGH_FRAG
         )
-        self._vbo = context._gl_context._gl_ctx.buffer(make_quad(-1, -1, 1, 1).tobytes(), dynamic=True)
-        self._vao = context._gl_context._gl_ctx.vertex_array(self.shader_prog, [(self._vbo, '2f 2f', 'in_pos', 'in_uv')])
+        self._vbo = context.gl_context._gl_ctx.buffer(make_quad(-1, -1, 1, 1).tobytes(), dynamic=True)
+        self._vao = context.gl_context._gl_ctx.vertex_array(self.shader_prog, [(self._vbo, '2f 2f', 'in_pos', 'in_uv')])
         self._viewport = None  
 
     def set_viewport(self, ox:int, oy:int, sw:int, sh:int) -> None:
@@ -73,17 +73,13 @@ class ShaderPass:
         Dump a pygame surface, so it can be rendered.
         """
         data = pygame.image.tobytes(surf, "RGBA", True)
-        tex = self.context._gl_context._gl_ctx.texture(surf.get_size(), 4)
+        tex = self.context.gl_context._gl_ctx.texture(surf.get_size(), 4)
         tex.filter = (filter, filter)
         tex.write(data)
         if slot in [s for _, s in self.textures.values()]:
             raise ValueError(f"Slot {slot} already occupied.")
         self.textures[name] = (tex, slot)
 
-    def set_slot(self, slot):
-        tex = self.context._gl_context._gl_ctx.texture(self.context.window.internal_size, 4)
-        tex.filter = (moderngl.NEAREST, moderngl.NEAREST)
-        self.textures["tex"] = (tex, slot)
 
     def load_texture(self, name:str, path:str, slot:int, filter:int = moderngl.NEAREST) -> None:
         """
@@ -95,7 +91,6 @@ class ShaderPass:
             slot, 
             filter
         )
- 
 
     def set_uniform(self, name:str, value:int) -> None:
         self.uniforms[name] = value

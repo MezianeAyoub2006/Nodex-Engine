@@ -61,10 +61,6 @@ class Window:
             offset_y = (self.screen_size[1] - fullscreen_y) / 2
         
         return int(offset_x), int(offset_y), int(fullscreen_x), int(fullscreen_y)
-
-        
-    def set_caption(self, caption):
-        pygame.display.set_caption(caption)
     
     @property
     def internal_size(self) -> tuple:
