@@ -1,35 +1,9 @@
-
-
 import pygame
 import moderngl 
 import numpy as np
 import nodex.engine
 
-PASSTHROUGH_VERT = """
-#version 330
-in vec2 in_pos;
-in vec2 in_uv;
-out vec2 uv;
-void main() {
-    uv = in_uv;
-    gl_Position = vec4(in_pos, 0.0, 1.0);
-}
-"""
-
-PASSTHROUGH_FRAG = """
-#version 330
-in vec2 uv;
-out vec4 fragColor;
-uniform sampler2D tex;
-void main() {
-    fragColor = texture(tex, uv);
-}
-"""
-
 def make_quad(x1:int, y1:int, x2:int, y2:int) -> np.ndarray:
-    """
-    Create a quad as a numpy array.
-    """
     return np.array([
         x1, y1,  0.0, 0.0,
         x2, y1,  1.0, 0.0,
@@ -40,9 +14,6 @@ def make_quad(x1:int, y1:int, x2:int, y2:int) -> np.ndarray:
     ], dtype='f4')
 
 def pixels_to_ndc(ox:int, oy:int, sw:int, sh:int, W:int, H:int) -> tuple:
-    """ 
-    Convert rectangle cordinates to NDC.
-    """
     x1 = (ox / W) * 2 - 1
     y1 = 1 - ((oy + sh) / H) * 2
     x2 = ((ox + sw) / W) * 2 - 1
@@ -55,55 +26,50 @@ class ShaderPass:
         self.textures = {}   
         self.uniforms = {}   
         self.shader_prog = context._gl_context._gl_ctx.program(
-            vertex_shader = vert_prog or PASSTHROUGH_VERT,
-            fragment_shader = frag_prog or PASSTHROUGH_FRAG
+            vertex_shader = vert_prog or self.context.shaders.get("_vertex"),
+            fragment_shader = frag_prog or self.context.shaders.get("_fragment")
         )
         self._vbo = context._gl_context._gl_ctx.buffer(make_quad(-1, -1, 1, 1).tobytes(), dynamic=True)
         self._vao = context._gl_context._gl_ctx.vertex_array(self.shader_prog, [(self._vbo, '2f 2f', 'in_pos', 'in_uv')])
         self._viewport = None  
 
+    def _next_slot(self) -> int:
+        used = {slot for _, slot in self.textures.values()}
+        slot = 0
+        while slot in used:
+            slot += 1
+        return slot
+
     def set_viewport(self, ox:int, oy:int, sw:int, sh:int) -> None:
-        """ 
-        Sets the shape of the display.
-        """
         self._viewport = (ox, oy, sw, sh)
 
-    def dump_pygame_surf(self, name:str, surf:pygame.Surface, slot:int, filter:int = moderngl.NEAREST) -> None:
-        """ 
-        Dump a pygame surface, so it can be rendered.
-        """
+    def dump_pygame_surf(self, name: str, surf: pygame.Surface, slot: int = None, filter: int = moderngl.NEAREST) -> None:
         data = pygame.image.tobytes(surf, "RGBA", True)
+        if name in self.textures:
+            tex, assigned_slot = self.textures[name]
+            if tex.size == surf.get_size():
+                tex.write(data)
+                return
+            else:
+                tex.release()  
         tex = self.context._gl_context._gl_ctx.texture(surf.get_size(), 4)
         tex.filter = (filter, filter)
         tex.write(data)
-        if slot in [s for _, s in self.textures.values()]:
-            raise ValueError(f"Slot {slot} already occupied.")
-        self.textures[name] = (tex, slot)
+        assigned_slot = slot if slot is not None else self._next_slot()
+        self.textures[name] = (tex, assigned_slot)
 
-    def set_slot(self, slot):
-        tex = self.context._gl_context._gl_ctx.texture(self.context.window.internal_size, 4)
-        tex.filter = (moderngl.NEAREST, moderngl.NEAREST)
-        self.textures["tex"] = (tex, slot)
-
-    def load_texture(self, name:str, path:str, slot:int, filter:int = moderngl.NEAREST) -> None:
-        """
-        Abstraction to dump a directly loaded pygame surf.
-        """
+    def load_texture(self, name:str, path:str, slot:int = None, filter:int = moderngl.NEAREST) -> None:
         self.dump_pygame_surf(
             name, 
             pygame.image.load(path).convert_alpha(), 
             slot, 
             filter
         )
- 
 
     def set_uniform(self, name:str, value:int) -> None:
         self.uniforms[name] = value
 
     def render(self) -> None:
-        """ 
-        Rendering hook.
-        """
         self._update_quad()
         for name, (tex, slot) in self.textures.items():
             tex.use(slot)
@@ -112,12 +78,21 @@ class ShaderPass:
             if name in self.shader_prog:
                 self.shader_prog[name] = value
         self._vao.render()
+        self._viewport = None 
 
     def _update_quad(self) -> None:
-        if self._viewport is None:
-            x1, y1, x2, y2 = -1, -1, 1, 1
-        else:
-            W, H = self.context.window.screen.get_size()
+        W, H = self.context.window.internal_size 
+
+        if self._viewport is not None:
             ox, oy, sw, sh = self._viewport
-            x1, y1, x2, y2 = pixels_to_ndc(ox, oy, sw, sh, W, H)
+        elif self.textures:
+            tex, _ = next(iter(self.textures.values()))
+            sw, sh = tex.size
+            ox, oy = 0, 0
+        else:
+            x1, y1, x2, y2 = -1, -1, 1, 1
+            self._vbo.write(make_quad(x1, y1, x2, y2).tobytes())
+            return
+
+        x1, y1, x2, y2 = pixels_to_ndc(ox, oy, sw, sh, W, H)
         self._vbo.write(make_quad(x1, y1, x2, y2).tobytes())

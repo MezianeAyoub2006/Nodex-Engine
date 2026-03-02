@@ -6,5 +6,5 @@ class Camera2D:
         self.position:pygame.Vector2 = pygame.Vector2(0, 0) 
         self.offset:pygame.Vector2 = pygame.Vector2(0, 0)
         self.rotation:float = 0
-        self.zoom:float = 1.4
+        self.zoom:float = 1
 

@@ -6,15 +6,18 @@ from nodex.misc.color import Color
 
 from .viewport_type import ViewportType
 from .viewport import Viewport
-from .camera2D import Camera2D
-from .camera3D import Camera3D
+from ..cameras.camera2D import Camera2D
+from ..cameras.camera3D import Camera3D
+
 class Renderer:
     def __init__(self, context : "nodex.Context"):
         self.context = context 
-        self._viewports:dict[str, Viewport] = {}
+        self._viewports:dict[str, Viewport] = {}       
 
     def _build_task(self, drawable, **kwargs):
-        task = {"content" : drawable}
+
+        task = {"content" : drawable, "tex" : kwargs["tex"]}
+        
         if isinstance(drawable, pygame.Rect):
             task["color"] = kwargs["color"]
         elif isinstance(drawable, pygame.Surface):
@@ -22,13 +25,14 @@ class Renderer:
         elif isinstance(drawable, str):
             surface = self.context.assets.get_image(drawable)
             return self._build_task(surface, **kwargs)
+        
         return task
     
     def add_viewport(self, name, type, order, fragment_shader = None, vertex_shader = None, extra_data = None):
-        self._viewports[name] = Viewport(self.context, order, type, fragment_shader, vertex_shader, extra_data)
+        self._viewports[name] = Viewport(self.context, name, order, type, fragment_shader, vertex_shader, extra_data)
     
     def draw(self, viewport, drawable, position = (0, 0), color = Color.WHITE):
-        task = self._build_task(drawable, position = position, color = color)
+        task = self._build_task(drawable, position = position, color = color, tex = "tex")
         self._viewports[viewport].add_task(task)
 
     def clear(self):

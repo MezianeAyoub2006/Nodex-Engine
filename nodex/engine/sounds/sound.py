@@ -1,3 +1,7 @@
+""" 
+Made by jfffh
+"""
+
 import pygame
 import nodex
 from .sound_state import SoundState
