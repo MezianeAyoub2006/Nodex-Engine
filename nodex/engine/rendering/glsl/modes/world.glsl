@@ -1,21 +1,25 @@
-#version 330
+#version 330 core
 in vec2 in_pos;
 in vec2 in_uv;
 out vec2 uv;
 
 uniform float rotation;
-uniform float zoom; 
+uniform float zoom;
 
 void main() {
-    uv = in_uv;
+    // Le quad reste fullscreen, on transforme les UVs
+    vec2 centered = in_uv - 0.5;
 
     float c = cos(rotation);
     float s = sin(rotation);
 
-    vec2 pos = vec2(
-        in_pos.x * c - in_pos.y * s,
-        in_pos.x * s + in_pos.y * c
+    vec2 rotated = vec2(
+        centered.x * c - centered.y * s,
+        centered.x * s + centered.y * c
     );
 
-    gl_Position = vec4(pos * zoom, 0.0, 1.0);
+    // Zoom dans l'espace UV (diviser = zoomer dedans)
+    uv = (rotated / zoom) + 0.5;
+
+    gl_Position = vec4(in_pos, 0.0, 1.0);
 }

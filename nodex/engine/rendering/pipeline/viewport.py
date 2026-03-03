@@ -24,6 +24,8 @@ class Viewport:
             self._pass = nodex.PygamePass(self.context, frag_prog, vert_prog)
         elif self.type == ViewportType.WORLD:
             self._pass = nodex.WorldPass(self.context, frag_prog)
+        elif self.type == ViewportType.MODE7:
+            self._pass = nodex.Mode7Pass(self.context, extra_data)
     
     def dispatch_tasks(self):
         for task in self.tasks:
@@ -49,13 +51,14 @@ class Viewport:
     def handle_pygame_surf(self, task):
         surface = task["content"]      
         if self.type == ViewportType.BASIC:
-            pos = task.get("position", (0, 0))
+            pos = task["position"]
             self._pass.set_viewport(pos[0], pos[1], surface.get_width(), surface.get_height())
             self._pass.dump_pygame_surf(task["tex"], surface)
         if self.type == ViewportType.PYGAME:
             self._pass.blit(surface, task["position"])
-        if self.type == ViewportType.WORLD:
+        if self.type == ViewportType.WORLD or ViewportType.MODE7:
             self._pass.draw(surface, task["position"])
+        
 
     
  
