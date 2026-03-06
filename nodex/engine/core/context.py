@@ -8,11 +8,12 @@ from .event_bus import EventBus
 from .input import Input
 from .window import Window
 from .gl_context import GlContext 
-from .assets_manager import AssetsManager
-from .shaders_manager import ShaderManager
+from ..ressources.assets_manager import AssetsManager
+from ..ressources.shaders_manager import ShaderManager
+from .fonts_manager import FontsManager
 
 class Context:
-    def __init__(self, resolution, window_scale = 1, vsync = True, loading_node = None, benchmark_fps_target = 60):
+    def __init__(self, resolution, window_scale = 1, vsync = True, loading_node = None):
         pygame.init()
         self.shaders = ShaderManager(self)
         self._load_shaders()
@@ -22,13 +23,15 @@ class Context:
         self._gl_context.init_shader_pass()
         self.runtime = Runtime(self)    
         self.system = System(self)
-       
         self.scenes = nodex.engine.world.SceneManger(self)
         self.input = Input(self)
         self.assets = AssetsManager(self)
+        self.fonts = FontsManager(self)
         self.sounds = nodex.engine.sounds.SoundManager(self)
         self.renderer = nodex.engine.Renderer(self)
-        
+    
+        self.overlay = nodex.engine.Renderer(self)
+
         self.timer = 0
         self.loading_node = loading_node
 
@@ -40,6 +43,7 @@ class Context:
         self._load_shader("_world", "modes/world")
         self._load_shader("_fragment", "passthrough/fragment")
         self._load_shader("_vertex", "passthrough/vertex")
+        self._load_shader("_outline", "effects/outline")
     
     def run(self):
         self.runtime.run()

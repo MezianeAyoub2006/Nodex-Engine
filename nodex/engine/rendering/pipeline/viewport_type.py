@@ -5,3 +5,4 @@ class ViewportType(Enum):
     PYGAME = auto()
     WORLD = auto()
     MODE7 = auto()
+    BILLBOARD = auto()

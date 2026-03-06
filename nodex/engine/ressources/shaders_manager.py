@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .context import Context
+    from ..core.context import Context
 
 class ShaderManager:
     def __init__(self, context : "Context"):

@@ -34,3 +34,6 @@ class GameNode:
         if self.flags.propagate:
             for child in sorted(self.children, key = attrgetter("order")):
                 child.update_all()
+
+
+

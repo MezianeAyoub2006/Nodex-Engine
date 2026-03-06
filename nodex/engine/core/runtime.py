@@ -26,6 +26,7 @@ class Runtime:
             self.context.system.poll_events()
             self.context._gl_context.before_rendering() 
             self.context.renderer.render()
+            self.context.overlay.render()
             self.context._gl_context.after_rendering()
             pygame.display.flip() 
             self._clock.tick(1000) 

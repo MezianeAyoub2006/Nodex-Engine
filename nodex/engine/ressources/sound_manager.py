@@ -1,5 +1,5 @@
-from .sound_loader import SoundLoader
-from .sound_state import SoundState
+from ..sounds.sound_loader import SoundLoader
+from ..sounds.sound_state import SoundState
 
 class SoundManager:
     def __init__(self, context):

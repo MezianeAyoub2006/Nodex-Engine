@@ -5,11 +5,11 @@ from .viewport_type import ViewportType
 
 class Viewport:
     TASK_DISPATCH_TABLE = None
-    def __init__(self, context : "nodex.Context", name, order, type : ViewportType, frag_prog = None, vert_prog = None, extra_data = None):
+    def __init__(self, context : "nodex.Context", name, order, type : ViewportType, frag_prog = None, vert_prog = None, settings = None):
         self.context = context  
         self.name = name
         self.type = type
-        self.init_pass(frag_prog, vert_prog, extra_data) 
+        self.init_pass(frag_prog, vert_prog, settings) 
         self.tasks = []   
         self.order = order
         self.rendering_id = 0
@@ -17,7 +17,7 @@ class Viewport:
     def add_task(self, task):
         self.tasks.append(task)
 
-    def init_pass(self, frag_prog, vert_prog, extra_data):
+    def init_pass(self, frag_prog, vert_prog, settings):
         if self.type == ViewportType.BASIC:
             self._pass = nodex.ShaderPass(self.context, frag_prog, vert_prog) 
         elif self.type == ViewportType.PYGAME:
@@ -25,7 +25,9 @@ class Viewport:
         elif self.type == ViewportType.WORLD:
             self._pass = nodex.WorldPass(self.context, frag_prog)
         elif self.type == ViewportType.MODE7:
-            self._pass = nodex.Mode7Pass(self.context, extra_data)
+            self._pass = nodex.Mode7Pass(self.context, settings)
+        elif self.type == ViewportType.BILLBOARD:
+            self._pass = nodex.BillboardPass(self.context, frag_prog, settings)
     
     def dispatch_tasks(self):
         for task in self.tasks:
@@ -56,16 +58,18 @@ class Viewport:
             self._pass.dump_pygame_surf(task["tex"], surface)
         if self.type == ViewportType.PYGAME:
             self._pass.blit(surface, task["position"])
-        if self.type == ViewportType.WORLD or ViewportType.MODE7:
+        if self.type == ViewportType.MODE7:
             self._pass.draw(surface, task["position"])
-        
-
-    
+        if self.type == ViewportType.BILLBOARD:
+            if "asset" in task:
+                self._pass.draw(task["asset"], task["position"])
+            else:
+                self._pass.draw(surface, task["position"])
  
     def clear(self):
         self.tasks.clear()
 
 Viewport.TASK_DISPATCH_TABLE = {
     pygame.Surface: Viewport.handle_pygame_surf,
-    pygame.Rect: Viewport.handle_pygame_rect,
+    pygame.Rect: Viewport.handle_pygame_rect,  
 }

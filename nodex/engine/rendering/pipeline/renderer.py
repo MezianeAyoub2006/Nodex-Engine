@@ -12,11 +12,15 @@ from ..cameras.camera3D import Camera3D
 class Renderer:
     def __init__(self, context : "nodex.Context"):
         self.context = context 
-        self._viewports:dict[str, Viewport] = {}       
+        self._viewports:dict[str, Viewport] = {}
+        self._overlay:dict[str, Viewport] = {}      
+        self._order = 0 
 
     def _build_task(self, drawable, **kwargs):
 
         task = {"content" : drawable, "tex" : kwargs["tex"]}
+        if "asset" in kwargs:
+            task["asset"] = kwargs["asset"]
         
         if isinstance(drawable, pygame.Rect):
             task["color"] = kwargs["color"]
@@ -28,11 +32,19 @@ class Renderer:
         
         return task
     
-    def add_viewport(self, name, type, order, fragment_shader = None, vertex_shader = None, extra_data = None):
-        self._viewports[name] = Viewport(self.context, name, order, type, fragment_shader, vertex_shader, extra_data)
+    def add_viewport(self, name, type, fragment_shader=None, vertex_shader=None, settings=None, order=None):
+        self._viewports[name] = Viewport(self.context, name, order if order is not None else self._order, type, fragment_shader, vertex_shader, settings)
+        self._order += 1
+
+    def draw(self, viewport, drawable, position = (0, 0), color = Color.WHITE, apply_offset = False, asset = None): 
+        if apply_offset:
+            camera = self.camera2D(viewport) 
+            position = (
+                position[0] + camera.position.x, 
+                position[1] - camera.position.y 
+            )
+        task = self._build_task(drawable, position = position, color = color, tex = "tex", asset = asset)
     
-    def draw(self, viewport, drawable, position = (0, 0), color = Color.WHITE):
-        task = self._build_task(drawable, position = position, color = color, tex = "tex")
         self._viewports[viewport].add_task(task)
 
     def clear(self):
@@ -47,9 +59,12 @@ class Renderer:
         _viewport = self._viewports[viewport]
         if _viewport.type == ViewportType.WORLD: 
             return _viewport._pass.camera
+        if _viewport.type == ViewportType.MODE7:
+            return _viewport._pass.dynamic_pass.camera
 
     def camera3D(self, viewport) -> Camera3D:
         _viewport = self._viewports[viewport]
         if _viewport.type == ViewportType.MODE7: 
             return _viewport._pass.camera
+        
         
