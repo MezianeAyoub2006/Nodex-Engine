@@ -1,11 +1,15 @@
 import nodex
-import impl
+import impl 
 
-from moving import Moving
+
+
+DISPLAY_FPS = False
+
+# I did not have the time to integrate properly these to the settings menu, sorry ;(
+VSYNC = True
+WINDOW_SCALE = 2
             
 if __name__ == "__main__":
-
-    context = nodex.engine.Context((250, 240), 2, False) 
-    context.scenes.persistant.add_game_node(impl.GlobalNode(context))
-    context.scenes.persistant.add_game_node(Moving(context))
+    context = nodex.engine.Context((256, 240), WINDOW_SCALE, VSYNC) 
+    context.scenes.persistant.add_game_node(impl.Persistant(context, DISPLAY_FPS))
     context.run()

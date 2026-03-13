@@ -3,6 +3,10 @@ import pygame
 
 
 class PygamePass(ShaderPass):
+    """ 
+    A small abstraction over ShaderPass that encapsulate an internal 
+    pygame surface, automatically rendered.
+    """
     def __init__(self, context, frag_prog=None, vert_prog=None):
         super().__init__(context, frag_prog, vert_prog)
         self._surf = pygame.Surface(context.window.internal_size, pygame.SRCALPHA)

@@ -27,12 +27,21 @@ class Mode7Pass:
         self.static_pass = ShaderPass(self.context, self.context.shaders.get("_mode7")) 
         # we load it's texture from the settings
         self.static_pass.load_texture(settings["texture_name"], settings["texture"])
+        print(settings["infinite"])
+        self.static_pass.load_texture("infinite", settings["infinite"])
+        self.static_pass.load_texture("extra", settings["extra"])
+        
         # dynamic texture shader pass
         self.dynamic_pass = WorldPass(self.context, self.context.shaders.get("_mode7"))
+        self.dynamic_pass.load_texture("infinite", settings["infinite"])
+        self.dynamic_pass.load_texture("extra", settings["extra"])
  
         self.camera.position.z = 0.1
         self.camera.position.x = 0.5
         self.camera.position.y = -0.3
+
+
+        self.scenes = settings["scenes"]
 
     @property
     def static_size(self):
@@ -62,13 +71,11 @@ class Mode7Pass:
         flipped_y = self.context.window.internal_size[1] - position[1] - surface.get_height()
         self.dynamic_pass.draw(surface, (position[0], flipped_y))
 
-    def update_camera(self):
-        # we offset the content of the dynamic surface to synchronize the rendering with the static texture
+    def dynamic_follow(self, position):
         self.dynamic_pass.camera.position.x = self.camera.offset.x * self.scale[0] * self.dynamic_size[0]
         self.dynamic_pass.camera.position.y = -self.camera.offset.y * self.scale[1] * self.dynamic_size[1]
-        # we center the dynamic texture, into the projection of the 3D camera to the ground
-        self.camera.offset.x = self.camera.position.x - 0.5 / self.scale[0]
-        self.camera.offset.y = self.camera.position.y - 0.5 / self.scale[1]
+        self.camera.offset.x = position[0] - 0.5 / self.scale[0]
+        self.camera.offset.y = position[1] - 0.5 / self.scale[1]
 
     def set_scale(self):
         """
@@ -98,13 +105,14 @@ class Mode7Pass:
             _pass.set_uniform("camera_z", self.camera.position.z)    
             _pass.set_uniform("camera_angle", self.camera.rotation)   
             _pass.set_uniform("horizon_height", self.camera.horizon_height)
+            _pass.set_uniform("time", self.context.timer)
         self.set_offset()
         self.set_scale()
        
     def render(self):
-        self.update_camera()
-        self.set_uniforms()
-        # we force the static viewport to fit the screen, because the static texture is huge in size
-        self.static_pass.set_viewport(0, 0, *self.context.window.internal_size)
-        self.static_pass.render()
-        self.dynamic_pass.render()
+        if self.context.scenes.current_scene in self.scenes:
+            self.set_uniforms()
+            # we force the static viewport to fit the screen, because the static texture is huge in size
+            self.static_pass.set_viewport(0, 0, *self.context.window.internal_size)
+            self.static_pass.render()
+            self.dynamic_pass.render()

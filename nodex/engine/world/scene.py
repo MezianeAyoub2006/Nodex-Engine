@@ -6,8 +6,10 @@ class Scene:
     def add_game_node(self, game_node):
         self.nodes.add(game_node)
 
+    def load(self):
+        for node in self.nodes:
+            node.load()
+
     def update(self):   
         for node in self.nodes:
             node.update_all()
-            if node.flags.render:
-                node.render()

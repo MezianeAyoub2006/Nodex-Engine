@@ -24,34 +24,29 @@ class AssetsManager:
         w, h = surface.get_size()
         return pygame.transform.scale(surface, (w * scale[0], h * scale[1]))
                 
-    def load_image(self, name, path, scale = (1, 1)):
+    def load_image(self, name, path, scale=(1, 1)):
         self.register_surface(name, self._load_image(path, scale))
     
-    def load_spritesheet(self, name, path, tile_size, scale = (1, 1)):
-        spritesheet_surface = self._load_image(path, scale) 
-        spritesheet_size = spritesheet_surface.get_size() 
-        spritesheet = {}
+    def load_spritesheet(self, name, path, tile_size, scale=(1, 1)):
+       
+        spritesheet_surface = self._load_image(path, scale)
+        self.register_surface(name, spritesheet_surface)
+        spritesheet_size = spritesheet_surface.get_size()
+        self._spritesheets[name] = {"surface" : None, "size" : (
+            int(spritesheet_size[0] // tile_size[0]),
+            int(spritesheet_size[1] // tile_size[1]),
+        )}
         for x in range(int(spritesheet_size[0] // tile_size[0])):
             for y in range(int(spritesheet_size[1] // tile_size[1])):
-                spritesheet[(x, y)] = spritesheet_surface.subsurface((
+                self.register_surface(f"{name}.{x}.{y}", spritesheet_surface.subsurface((
                     x * tile_size[0],
                     y * tile_size[1],
                     tile_size[0],
                     tile_size[1]
-                ))
-        self._spritesheets[name] = spritesheet
+                )))
         
     def get_image(self, name):
         if name in self._assets:
             return self._assets[name]
         else:
             raise KeyError(f"'{name}' image don't exist")
-    
-    def get_spritesheet(self, name):
-        if name in self._spritesheets:
-            return self._spritesheets[name]
-        else:
-            raise KeyError(f"'{name}' spritesheet don't exist")
-        
-
-
