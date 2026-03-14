@@ -1,2 +1,2 @@
 from .sound_loader import *
-from .sound_manager import SoundManager
+from ..ressources.sound_manager import SoundManager

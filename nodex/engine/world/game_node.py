@@ -18,6 +18,7 @@ class GameNode:
         self.flags = Flags()
         GameNode._id += 1
         self.id = GameNode._id
+        self.alive = True
     
     def update(self):
         pass 
@@ -28,9 +29,20 @@ class GameNode:
     def load(self):
         pass
 
+    def add_child(self, game_node):
+        self.children.add(game_node)
+
     def update_all(self): 
         if self.flags.update:
             self.update() 
         if self.flags.propagate:
-            for child in sorted(self.children, key = attrgetter("order")):
+            for child in sorted(self.children, key=attrgetter("order")):
                 child.update_all()
+        if self.flags.render:
+            self.render()
+        self.children = {child for child in self.children if child.alive}
+
+    def kill(self):
+        self.alive = False
+
+
