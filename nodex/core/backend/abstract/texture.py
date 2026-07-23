@@ -1,7 +1,7 @@
 from typing import Type, Any
 from abc import abstractmethod, ABC 
 
-from ....types.geometry.rectangle import Rectangle  
+from ....math import Rectangle 
 
 class AbstractTexture(ABC):
 

@@ -1,13 +1,13 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Union, Callable, Optional, Any
-from ..nxl import attr, has_tag, Expression
+from ...nxl import Expression, attr
 
 if TYPE_CHECKING: 
-    from ..core.kernel.context import Context
+    from ..kernel.context import Context
 
 from dataclasses import dataclass
 
-from ..core.kernel.warning import Warning, Priority
+from ..kernel.warning import Warning, Priority
 from .exceptions import NodeRegisteryException, NodeIdChange
 
 @dataclass
@@ -94,7 +94,7 @@ class Node:
     def bind(self, child: "Node"):
         self.children.append(child)
         
-    def __init__(self : "Node", context : "Context", order:int = 0) -> None:
+    def __init__(self, context : "Context", order:int = 0) -> None:
         self.context: "Context" = context
         self.children:list["Node"] = []
         self._id: int = Node._id 
@@ -105,18 +105,15 @@ class Node:
         Node._id += 1
         self._name = None 
 
-    # testé
     def _update_all(self) -> None:
         self.children.sort()
         self.update()   
         for child in self.children:
             child._update_all()
 
-    # testé
     def add_tag(self, tag: str) -> None:
         self.tags.add(tag) 
 
-    # non testé 
     def remove_tag(self, tag: str) -> None:
         if not tag in self.tags:
             self.context.warning(
@@ -127,29 +124,26 @@ class Node:
             return
         self.tags.remove(tag)
 
-    # testé
     def update(self) -> None:
         pass 
 
-    # non implémenté
     def render(self) -> None:
         pass  
 
-    # non implémenté
     def destroy(self) -> None:
         pass 
 
-    # testé
+    def attr(self, expression:Expression) -> Expression:
+        return attr(expression).on(self)
+
     @property
     def id(self):
         return self._id 
 
-    # testé
     @id.setter 
     def id(self, value):
         raise NodeIdChange("Node id cannot be manually changed.")
 
-    # testé
     @property
     def name(self):
         if self._name:
@@ -157,6 +151,12 @@ class Node:
         else:
             return "UNKNOWN" 
 
-    # testé
+    @name.setter
+    def name(self, value:str):
+        Node._name_registry[value] = self._id 
+        self._name = value
+        Node.register(self, value)
+
+
     def __repr__(self):
         return f"Node<{self.name}>"

@@ -7,6 +7,7 @@ class AttrNode(Expression):
     _MISSING = object()
 
     def __init__(self, path: str, default=None):
+        super().__init__()
         self.path = path.split(".")
         self.default = default
 

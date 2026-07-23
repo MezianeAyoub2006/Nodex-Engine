@@ -2,10 +2,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from ..expression import Expression
 if TYPE_CHECKING:
-    from ...node import Node 
+    from ...core.node import Node 
 
 class HasTagNode(Expression):
     def __init__(self, tag: str):
+        super().__init__()
         self.tag = tag 
 
     def resolve(self, target: Node):

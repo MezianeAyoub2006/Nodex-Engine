@@ -1,10 +1,10 @@
 from ..backend import Backend, BACKENDS
-from ..graphics import Graphics, settings
+from ..graphics import Graphics
 from .runtime import Runtime 
 from ..ressources import ShaderManager
 from .service import Service
 from .event_bus import EventBus
-from ...node import Node
+from ..node import Node
 
 class Context:
     def __init__(self, 

@@ -3,7 +3,7 @@ if TYPE_CHECKING: from .context import Context
 from collections import defaultdict
 from typing import Callable
 from dataclasses import dataclass
-from .service import Service, EnginePhase 
+from .service import Service
 
 @dataclass
 class Event:

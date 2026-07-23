@@ -16,5 +16,8 @@ def evaluate(target, expression: Expression):
         )
     
     elif hasattr(expression, "resolve"):
-        return expression.resolve(target)
+        if expression.target:
+            return expression.resolve(expression.target)
+        else:
+            return expression.resolve(target)
     

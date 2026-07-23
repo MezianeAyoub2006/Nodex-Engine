@@ -2,7 +2,7 @@ import pygame
 
 from typing import Any
 
-from ....types.geometry.rectangle import Rectangle 
+from ....math import Rectangle 
 from ..abstract.texture import AbstractTexture
 
 # pygame.Surface wrapper 

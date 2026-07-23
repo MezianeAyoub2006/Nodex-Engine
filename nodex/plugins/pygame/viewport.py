@@ -1,8 +1,7 @@
 import pygame
 
 from ...core import Context, settings
-from ...types.geometry.rectangle import Rectangle
-
+from ...math import Rectangle 
 VP_Z_OFFSET = 100
 
 class PygameViewport:

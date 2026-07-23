@@ -6,7 +6,9 @@ from ..expression import Expression
 
 class KeyPressedNode(Expression):
     def __init__(self, key:Key): 
+        super().__init__()
         self.key = key
+
     def resolve(self, target:Context): 
         return target.keyboard.is_pressed(self.key)
     def __repr__(self): 
@@ -14,6 +16,7 @@ class KeyPressedNode(Expression):
 
 class KeyActiveNode(Expression):
     def __init__(self, key:Key): 
+        super().__init__()
         self.key = key
     def resolve(self, target:Context): 
         return target.keyboard.is_active(self.key)
@@ -22,6 +25,7 @@ class KeyActiveNode(Expression):
 
 class KeyReleasedNode(Expression):
     def __init__(self, key:Key): 
+        super().__init__()
         self.key = key
     def resolve(self, target:Context): 
         return target.keyboard.is_released(self.key)

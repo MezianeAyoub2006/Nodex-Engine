@@ -3,8 +3,7 @@ from ...core.kernel.context import Context
 from .settings import PygameSettings 
 from ...core.kernel.service import Service
 from ...core.kernel.phase import EnginePhase
-from ...types.geometry.rectangle import Rectangle 
-
+from ...math import Rectangle 
 from .viewport import PygameViewport 
 
 class PygameViewports(Service): 

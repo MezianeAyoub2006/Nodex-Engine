@@ -1,6 +1,6 @@
 from abc import abstractmethod, ABC 
 
-from ....types.geometry.rectangle import Rectangle 
+from ....math import Rectangle 
 
 from .window import AbstractWindow
 from .shader import AbstractShader

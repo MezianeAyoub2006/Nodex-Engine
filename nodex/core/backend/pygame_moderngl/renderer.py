@@ -1,7 +1,7 @@
 import moderngl
 import pygame
 
-from ....types.geometry.rectangle import Rectangle
+from ....math import Rectangle 
 from ..abstract import AbstractRenderer
 from .window import PygameModernglWindow
 from .shader import PygameModernglShader

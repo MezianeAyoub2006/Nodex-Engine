@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Optional
 from .operator import Operator  
 from .types import Node
 
@@ -8,6 +8,13 @@ if TYPE_CHECKING:
     from .entry import Entry 
 
 class Expression:  
+    def __init__(self, target: Optional[Any] = None):
+        self.target = target
+
+    def on(self, target: Any) -> Expression:
+        self.target = target
+        return self
+
     def __and__(self, other: Node) -> Entry:
         from .entry import Entry
         return Entry(self, other, Operator.AND)
@@ -51,7 +58,7 @@ class Expression:
     def hash(self) -> str:
         return self.__repr__()
     
-    def evaluate(self, target):
+    def eval(self, target):
         from .eval import evaluate 
         return evaluate(target, self)
 

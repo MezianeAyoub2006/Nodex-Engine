@@ -1,4 +1,4 @@
-from ..core.exeption import CoreException
+from ..exeption import CoreException
 
 class NodeException(CoreException):
     pass 
@@ -10,4 +10,7 @@ class NodeRegisteryException(NodeException):
     pass
 
 class NodeIdChange(NodeException):
+    pass
+
+class NodeNameChange(NodeException):
     pass
