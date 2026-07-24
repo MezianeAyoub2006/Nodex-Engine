@@ -2,13 +2,13 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING: from .context import Context
 from collections import defaultdict
 from typing import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from .service import Service
 
 @dataclass
 class Event:
     type: str
-    data: dict 
+    data: dict = field(default_factory = dict)
     timer: float = 0
     frames:int = 0
     alive: bool = True

@@ -1,9 +1,15 @@
-import nodex as nx 
+import nodex 
 import impl 
 
-context = nx.Context((250, 240), 1, True) 
-context.root.bind(impl.Player(context)) 
+context = nodex.Context(
+    (250, 240), 1, True, 
+    # make sur the game runs on pygame
+    backend = nodex.backend.Backend.PYGAME_MODERNGL 
+)
 
-@context.run()
-def loop():
-    pass
+# adds the initializing node
+context.root.bind(impl.Player(context)) 
+context.root.bind(impl.GameLoop(context))
+
+# runs the game loop 
+context.run() 

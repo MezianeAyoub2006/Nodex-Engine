@@ -10,8 +10,12 @@ if TYPE_CHECKING:
 class Expression:  
     def __init__(self, target: Optional[Any] = None):
         self.target = target
+        
+    def __call__(self, target) -> Expression:
+        from .eval import evaluate 
+        return evaluate(target, self)
 
-    def on(self, target: Any) -> Expression:
+    def __getitem__(self, target) -> Expression:
         self.target = target
         return self
 
@@ -57,8 +61,3 @@ class Expression:
     
     def hash(self) -> str:
         return self.__repr__()
-    
-    def eval(self, target):
-        from .eval import evaluate 
-        return evaluate(target, self)
-

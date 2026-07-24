@@ -36,12 +36,19 @@ class Context:
     @property
     def shader_type(self):
         return self._backend_types.shader 
-         
+
+    @property
+    def dt(self):
+        return self._runtime.dt 
+
     def run(self):
-        return self._runtime.run   
-    
+        self._runtime.run()
+         
     def fps(self):
         return self._runtime._clock.get_fps()
     
     def warning(self, type, message, priority: int):
         pass
+
+    def start(self, node: Node):
+        self.root.bind(node)

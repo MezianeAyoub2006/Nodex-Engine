@@ -1,15 +1,35 @@
-import nodex as nx 
-from nodex.nxl import key, attr 
+import nodex
+from nodex.nxl import key, attr, interval, f
+import pygame
 
-class Player(nx.Node):
+def test(target):
+    return len(target.tags) > 3
+
+class Player(nodex.Node):
     def __init__(self, context): 
         super().__init__(context) 
         self.name = "player"
         self.tags.add("@player")
-        self.can_jump = True
-        self.is_jumping = key(nx.Key.SPACE).pressed & self.attr("can_jump")
-        
+        self.tags.add("@player2")
+        self.tags.add("@player3")
+        self.grounded = True
+
+        self.can_jump = (
+            key(nodex.Key.SPACE).pressed 
+            & attr("grounded")[self] 
+        )
+
+        self.cl_rule = interval(0.5) & f(test)[self]
+
     def update(self):
-        if self.is_jumping.eval(self.context): 
-            print(self.tags)
+        if self.cl_rule(self.context):
+            print("HELLO")
+
+
+
+
+
+
+
+
         

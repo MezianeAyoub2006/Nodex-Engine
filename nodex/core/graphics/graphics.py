@@ -42,7 +42,7 @@ class Graphics:
         self._tasks: list[RenderTask] = []
         self._renderer = self._context.renderer
         self._shaders = self._context.shaders
-        self._bg_color = (0, 0, 0, 0) 
+        self.bg_color = (0, 0, 0, 0) 
     
     @property
     def _current_shader(self) -> AbstractShader | None:
@@ -63,11 +63,3 @@ class Graphics:
         for task in sorted(self._tasks, key = lambda t: t.order):
             Graphics._task_map[type(task.settings)](self._context, task)
         self._tasks.clear()
-
-    @property
-    def bg_color(self) -> tuple[int, int, int, int]:  
-        return self._bg_color 
-    
-    @bg_color.setter 
-    def bg_color(self, color: tuple[int, int, int, int]):
-        self._bg_color = color
