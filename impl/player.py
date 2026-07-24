@@ -1,5 +1,5 @@
-import nodex
-from nodex.nxl import key, attr, interval, f
+import nodex.nodex as nodex
+from nodex.nodex.nxl import key, attr, interval, f
 import pygame
 
 def test(target):
@@ -13,9 +13,8 @@ class Player(nodex.Node):
         self.tags.add("@player2")
         self.tags.add("@player3")
         self.grounded = True
-
         self.can_jump = (
-            key(nodex.Key.SPACE).pressed 
+            key(nodex.Key.SPACE).pressed  
             & attr("grounded")[self] 
         )
 

@@ -1,3 +1,2 @@
-from .core import *
-from .nxl import *
-from . import plugins
+from .nodex import * 
+from .cffi import _ndx_cffi

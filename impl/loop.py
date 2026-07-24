@@ -1,4 +1,4 @@
-import nodex 
+import nodex.nodex as nodex 
 
 class GameLoop(nodex.Node):
     def __init__(self, context):
