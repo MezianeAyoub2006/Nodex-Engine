@@ -4,18 +4,6 @@
 #include "stdbool.h"
 #include "nodex/status/status.h"
 
-#define NX_CHECK_DRIVER(driver) \
-    do { \
-        if (!(driver)) \
-            return NX_ERR_DRIVER_NULL; \
-    } while (0) 
- 
-#define NX_CHECK_FEATURE(func_ptr) \
-    do { \
-        if (!(func_ptr)) \
-            return NX_WARN_FEATURE_NOT_SUPPORTED; \
-    } while (0)
-
 typedef struct { 
     int virtualWidth; 
     int virtualHeight; 
