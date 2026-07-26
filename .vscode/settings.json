@@ -1,7 +1,3 @@
 {
     "python-envs.defaultEnvManager": "ms-python.python:system",
-    
-    "C_Cpp.files.exclude": {
-        "**/cdef.h": true
-    }
 }

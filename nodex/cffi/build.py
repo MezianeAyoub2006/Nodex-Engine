@@ -9,13 +9,8 @@ NODEX_SRC = NATIVE_ROOT / "src"
 
 ffibuilder = FFI()
 
-include_directories = [str(NODEX_INCLUDE)] + [
-    str(path) for path in NODEX_INCLUDE.rglob("*") if path.is_dir()
-]
-
-source_files = [
-    str(path) for path in NODEX_SRC.rglob("*.c")
-    ]
+include_directories = [ str(NODEX_INCLUDE)] + [ str(path) for path in NODEX_INCLUDE.rglob("*") if path.is_dir() ]
+source_files = [ str(path) for path in NODEX_SRC.rglob("*.c") ]
 
 ffibuilder.set_source(
     "_ndx_cffi",
