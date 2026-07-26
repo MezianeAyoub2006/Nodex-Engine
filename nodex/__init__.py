@@ -1,2 +1,2 @@
 from .nodex import * 
-from .cffi import _ndx_cffi
+from .build.output import _ndx_cffi as cffi

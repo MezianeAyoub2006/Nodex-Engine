@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Union, Callable, Optional, Any
-from ...nxl import Expression, attr
+from ...NX_L import Expression, attr
 
 if TYPE_CHECKING: 
     from ..kernel.context import Context

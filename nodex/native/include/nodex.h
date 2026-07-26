@@ -13,6 +13,10 @@
 #include "nodex/data/color.h"
 #include "nodex/backend/abstract/renderer.h"
 #include "nodex/backend/raylib/raylib_renderer.h"
+#include "nodex/backend/abstract/keyboard.h"
+#include "nodex/backend/raylib/raylib_keyboard.h"
 #include "nodex/backend/abstract/backend.h"
+#include "nodex/backend/raylib/raylib_time.h"
+#include "nodex/backend/abstract/time.h"
 
 #endif

@@ -15,33 +15,24 @@ typedef enum {
 } NxBlend;
 
 typedef struct {
-    NxStatus (*init)(void);  
-    NxStatus (*beginFrame)(void);
-    NxStatus (*endFrame)(void);
-    NxStatus (*clear)(NxColor color);
-    NxStatus (*draw)(
-        const NxTexture* texture, 
-        NxRect source, 
-        NxRect dest, 
-        NxVector2 origin, 
-        float rotation, 
-        NxColor tint
-    );
-    NxStatus (*setBlend)(NxBlend blend);
+    void (*init)(void);
+    void (*beginFrame)(void);
+    void (*endFrame)(void);
+    void (*clear)(NxColor);
+    void (*draw)(const NxTexture*, NxRect, NxRect, NxVector2, float, NxColor);
+    void (*setBlend)(NxBlend);
 } NxRendererDriver;
 
-NxStatus Nx_RendererInit(const NxRendererDriver* driver); 
-NxStatus Nx_RendererBeginFrame(void); 
-NxStatus Nx_RendererEndFrame(void); 
-NxStatus Nx_RendererClear(NxColor color);
-NxStatus Nx_RendererDraw(
-    const NxTexture* texture, 
-    NxRect source, 
-    NxRect dest, 
-    NxVector2 origin, 
-    float rotation, 
+void Nx_RendererInit(const NxRendererDriver* driver);
+void Nx_RendererBeginFrame(void);
+void Nx_RendererEndFrame(void);
+void Nx_RendererClear(NxColor color);
+void Nx_RendererDraw(
+    const NxTexture* texture,
+    NxRect source, NxRect dest,       
+    NxVector2 origin, float rotation, 
     NxColor tint
-); 
-NxStatus Nx_RendererSetBlend(NxBlend blend); 
+);
+void Nx_RendererSetBlend(NxBlend blend);
 
 #endif

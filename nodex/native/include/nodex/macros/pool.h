@@ -23,8 +23,13 @@ static NxStatus NAME##_Pool_Init(NAME##Pool* pool, size_t capacity) {           
     pool->generation = (uint32_t*)calloc(capacity, sizeof(uint32_t));               \
     pool->active = (bool*)calloc(capacity, sizeof(bool));                           \
     pool->free_list = (uint32_t*)malloc(capacity * sizeof(uint32_t));               \
-    if (!pool->data || !pool->generation || !pool->active || !pool->free_list)      \
+    if (!pool->data || !pool->generation || !pool->active || !pool->free_list) {    \
+        free(pool->data);                                                           \
+        free(pool->generation);                                                     \
+        free(pool->active);                                                         \
+        free(pool->free_list);                                                      \
         return NX_ERR_NULLPTR;                                                      \
+    }                                                                               \
     for (size_t i = 0; i < capacity; i++)                                           \
         pool->free_list[i] = (uint32_t)(capacity - 1 - i);                          \
     pool->capacity = capacity;                                                      \
@@ -67,7 +72,7 @@ static inline int32_t NAME##_Pool_Acquire(NAME##Pool* pool) {                   
     if (!pool) return -1;                                                           \
     if (pool->free_count == 0) {                                                    \
         size_t new_cap = pool->capacity == 0 ? 1 : pool->capacity * 2;              \
-        if (NAME##Pool_Grow(pool, new_cap) != NX_OKAY) return -1;                   \
+        if (NAME##_Pool_Grow(pool, new_cap) != NX_OKAY) return -1;                  \
     }                                                                               \
     uint32_t idx = pool->free_list[--pool->free_count];                             \
     pool->active[idx] = true;                                                       \
@@ -99,7 +104,7 @@ static inline uint32_t NAME##_Pool_GetGeneration(NAME##Pool* pool, int32_t index
     return pool->generation[index];                                                 \
 }                                                                                   \
 \
-static void NAME##Pool_Destroy(NAME##Pool* pool) {                                  \
+static void NAME##_Pool_Destroy(NAME##Pool* pool) {                                 \
     if (!pool) return;                                                              \
     free(pool->data);                                                               \
     free(pool->generation);                                                         \
@@ -108,5 +113,4 @@ static void NAME##Pool_Destroy(NAME##Pool* pool) {                              
     memset(pool, 0, sizeof(NAME##Pool));                                            \
 }
 
-#endif              
-
+#endif

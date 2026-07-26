@@ -4,8 +4,8 @@
 /*  NxState is mainly a return value for functions to indicate
 to the engine the state of their execution, if everything went okay,
 you will get NX_OKAY, if the developper want to warn you about some
-shi, you will get NX_WARN_... if the function completly failed,
-you will get NX_ERR_... */
+shi, you will get NX_WARN_... . If the function completly failed,
+you will get NX_ERR_... . */
 typedef enum {
     NX_OKAY = 0,                    // shi fine.
 
@@ -39,5 +39,15 @@ NX_IS_WARNING(NX_ERR_OUT_OF_MEMORY) ->  0
 NX_IS_WARNING(NX_OKAY) -> 0*/
 #define NX_IS_WARNING(status) \
      ((status) >= NX_WARN)
+
+    
+/* Sets the global status of the engine execution */
+void Nx_SetStatus(NxStatus status, const char* message);
+
+/* Retrieves the last status set by Nx_SetStatus. */
+NxStatus Nx_GetStatus(void);
+
+/* Retrieves the message tied to the last status set by Nx_SetStatus. */
+const char* Nx_GetStatusMessage(void);
 
 #endif

@@ -10,50 +10,51 @@ static inline void get_real_size(const NxWindow* win, int* outW, int* outH) {
     *outH = (int)(win->virtualHeight * win->scale_Y);
 }
 
-static NxStatus Raylib_WindowInit(NxWindow* window) {
+static void Raylib_WindowInit(NxWindow* window) {
     fflush(stdout);
     SetTraceLogLevel(LOG_NONE);
-    SetConfigFlags(FLAG_WINDOW_HIDDEN); 
-    int rX, rY; 
-    get_real_size(window, &rX, &rY); 
-    NX_CHECK_NEGSIZE(rX, rY); 
-    if (!window->title)
-        return NX_ERR_NULLPTR; 
-    InitWindow(rX, rY, window->title); 
-    BeginDrawing(); 
-    ClearBackground(BLACK); 
-    EndDrawing(); 
+    SetConfigFlags(FLAG_WINDOW_HIDDEN);
+    int rX, rY;
+    get_real_size(window, &rX, &rY);
+    NX_CHECK_NEGSIZE(rX, rY, );
+    if (!window->title) {
+        Nx_SetStatus(NX_ERR_NULLPTR, "Window title is NULL");
+        return;
+    }
+    InitWindow(rX, rY, window->title);
+    BeginDrawing();
+    ClearBackground(BLACK);
+    EndDrawing();
     ClearWindowState(FLAG_WINDOW_HIDDEN);
-    return NX_OKAY; 
 }
 
-static NxStatus Raylib_Rescale(NxWindow* window) {
-    int rX, rY; 
-    get_real_size(window, &rX, &rY); 
-    NX_CHECK_NEGSIZE(rX, rY); 
-    SetWindowSize(rX, rY); 
-    return NX_OKAY; 
+static void Raylib_Rescale(NxWindow* window) {
+    int rX, rY;
+    get_real_size(window, &rX, &rY);
+    NX_CHECK_NEGSIZE(rX, rY, );
+    SetWindowSize(rX, rY);
 }
 
-static NxStatus Raylib_SetTitle(NxWindow* window) {
-    if (!window->title)
-        return NX_ERR_NULLPTR; 
-    SetWindowTitle(window->title); 
-    return NX_OKAY;
-}; 
-static NxStatus Raylib_ToggleFullscreen(NxWindow* window) {
+static void Raylib_SetTitle(NxWindow* window) {
+    if (!window->title) {
+        Nx_SetStatus(NX_ERR_NULLPTR, "Window title is NULL");
+        return;
+    }
+    SetWindowTitle(window->title);
+}
+
+static void Raylib_ToggleFullscreen(NxWindow* window) {
     ToggleFullscreen();
-    return NX_OKAY; 
-} 
+}
 
 static const NxWindowDriver raylibDriver = {
     .init = &Raylib_WindowInit,
     .setScale = &Raylib_Rescale,
-    .setVirtualSize = &Raylib_Rescale, 
-    .toggleFullscreen = &Raylib_ToggleFullscreen, 
-    .setTitle = &Raylib_SetTitle 
-}; 
+    .setVirtualSize = &Raylib_Rescale,
+    .toggleFullscreen = &Raylib_ToggleFullscreen,
+    .setTitle = &Raylib_SetTitle
+};
 
 const NxWindowDriver* Nx_GetRaylibWindowDriver(void) {
-    return &raylibDriver; 
+    return &raylibDriver;
 }

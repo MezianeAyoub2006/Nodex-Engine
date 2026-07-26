@@ -3,6 +3,6 @@
 
 #include "nodex/status/status.h" 
 
-NxStatus Nx_FormatStatus(char* buff_out, size_t buff_size, NxStatus status);
+bool Nx_FormatStatus(char* buff_out, size_t buff_size, NxStatus status);
 
 #endif
