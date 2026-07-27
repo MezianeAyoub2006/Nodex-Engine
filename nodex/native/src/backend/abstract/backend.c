@@ -48,27 +48,22 @@ void Nx_Init(
         return;
 
     Nx_TextureInit(backend.textureDriver);
-    printf("status1 %d", Nx_GetStatus());
     if (Nx_GetStatus() != NX_OKAY)
         return;
 
     Nx_RendererInit(backend.rendererDriver);
-    printf("status2 %d", Nx_GetStatus());
     if (Nx_GetStatus() != NX_OKAY)
         return;
 
     Nx_KeyboardInit(backend.keyboardDriver);
-    printf("status3 %d", Nx_GetStatus());
     if (Nx_GetStatus() != NX_OKAY)
         return;
 
     Nx_TimeInit(backend.timeDriver, (NxTime){.targetFps = targetFps});
-    printf("status4 %d", Nx_GetStatus());
     if (Nx_GetStatus() != NX_OKAY)
         return;
 
     Nx_SetTargetFps(targetFps);
-    printf("status5 %d", Nx_GetStatus());
     if (Nx_GetStatus() != NX_OKAY)
         return;
 }

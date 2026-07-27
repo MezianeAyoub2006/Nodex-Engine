@@ -5,7 +5,8 @@ import random
 ffi = nodex.cffi.ffi 
 lib = nodex.cffi.lib
 
-lib.Nx_RegisterBackends()
+lib.Nx_RegisterBackends()  
+
 lib.Nx_Init(lib.Nx_GetBackendTable()[lib.NX_BACKEND_RAYLIB], 600, 600, 1.0, 1.0, True, 10000, b"HellAAA")
 
 interface = lib.Nx_GetInterface()
@@ -51,7 +52,7 @@ class Bird:
         if self.x < 0 or self.x > 570 or self.y < 0 or self.y > 580:
             self.x = 300
             self.y = 300
-
+    
         draw_tex_fast(self.x, self.y)
 
 

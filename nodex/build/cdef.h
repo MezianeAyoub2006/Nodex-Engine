@@ -312,7 +312,7 @@ typedef struct {
     int arrival_id; 
     NxColor tint; 
 } NxDrawTaskFast; 
-typedef struct {
+typedef struct {    
     NxDrawTaskFast drawTasks[20000]; 
     int ptr; 
 } NxDrawQueueFast; 
@@ -328,7 +328,7 @@ typedef struct {
     NxDrawQueue drawQueue;  
     NxDrawQueueFast drawQueueFast; 
     NxKeyboardState keyboardState; 
-    // inserer interface pour python ici
+    NxStatus lastStatus;   
 } NxInterface;
 NxInterface* Nx_GetInterface(void);
 void Nx_Update(void);

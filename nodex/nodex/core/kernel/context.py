@@ -2,31 +2,44 @@ from .runtime import Runtime
 from .service import Service
 from .event_bus import EventBus
 from ..node import Node
+from ..wrapper import Backend, Wrapper
 
 class Context:
     def __init__(self, 
         virtual_size: tuple[int, int], 
-        window_scale : int = 1, 
+        window_scale : tuple[int, int] = (1, 1), 
         vsync: bool = True, 
-        caption: str = "Blank Shi", 
+        target_fps = 10000, 
+        caption: str = "Hello World", 
+        backend = Backend.RAYLIB   
+        
     ) -> None:
         Service.context = self 
+
+        self.wrapper = Wrapper(
+            virtual_size = virtual_size, 
+            window_scale = window_scale,
+            target_fps = target_fps,  
+            vsync = vsync, 
+            caption = caption, 
+            backend = backend
+        )
+
         self._runtime = Runtime(self)
         self.events = EventBus(self)
         self.root = Node(self)
 
     @property
     def dt(self):
-        return self._runtime.dt 
+        return self.wrapper.interface.dt 
+
+    @property     
+    def fps(self):
+        return self.wrapper.interface.dt  
 
     def run(self):
-        self._runtime.run()
-         
-    def fps(self):
-        return self._runtime._clock.get_fps()
+        return self._runtime.run()
     
     def warning(self, type, message, priority: int):
         pass
 
-    def start(self, node: Node):
-        self.root.bind(node)

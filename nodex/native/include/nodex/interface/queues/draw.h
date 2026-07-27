@@ -28,7 +28,7 @@ typedef struct {
     NxColor tint; 
 } NxDrawTaskFast; 
 
-typedef struct {
+typedef struct {    
     NxDrawTaskFast drawTasks[20000]; 
     int ptr; 
 } NxDrawQueueFast; 

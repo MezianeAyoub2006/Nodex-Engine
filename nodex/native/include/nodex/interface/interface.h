@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "nodex/interface/queues/draw.h"
 #include "nodex/interface/keyboard.h"
+#include "nodex/status/status.h"  
 
 typedef struct {
     bool shouldClose;   
@@ -12,7 +13,7 @@ typedef struct {
     NxDrawQueue drawQueue;  
     NxDrawQueueFast drawQueueFast; 
     NxKeyboardState keyboardState; 
-    // inserer interface pour python ici
+    NxStatus lastStatus;   
 } NxInterface;
 
 NxInterface* Nx_GetInterface(void);

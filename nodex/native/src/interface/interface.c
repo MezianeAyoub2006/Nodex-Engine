@@ -19,6 +19,7 @@ void Nx_Update(void) {
     interface.fps = Nx_GetFps(); 
     interface.dt = Nx_GetDt();
     interface.shouldClose = Nx_WindowShoudClose();
+    interface.lastStatus = Nx_GetStatus(); 
     //FillKeyboardState(); 
     Nx_RendererBeginFrame(); 
     Nx_RendererClear((NxColor){.r = 0, .g = 0, .b = 0, .a = 0}); 
