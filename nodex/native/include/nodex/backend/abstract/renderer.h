@@ -20,6 +20,7 @@ typedef struct {
     void (*endFrame)(void);
     void (*clear)(NxColor);
     void (*draw)(const NxTexture*, NxRect, NxRect, NxVector2, float, NxColor);
+    void (*drawFast)(const NxTexture*, NxRect, NxColor); 
     void (*setBlend)(NxBlend);
 } NxRendererDriver;
 
@@ -27,12 +28,20 @@ void Nx_RendererInit(const NxRendererDriver* driver);
 void Nx_RendererBeginFrame(void);
 void Nx_RendererEndFrame(void);
 void Nx_RendererClear(NxColor color);
+
 void Nx_RendererDraw(
     const NxTexture* texture,
     NxRect source, NxRect dest,       
     NxVector2 origin, float rotation, 
     NxColor tint
 );
+
+void Nx_RendererDrawFast(
+    const NxTexture* texture,
+    NxRect dest,        
+    NxColor tint
+);
+
 void Nx_RendererSetBlend(NxBlend blend);
 
 #endif

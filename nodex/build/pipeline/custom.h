@@ -1,4 +1,4 @@
-/* Custom definitions def to the pipeline */
+/* Custom definitions to the pipeline */
 
 typedef unsigned char uint8_t;
 

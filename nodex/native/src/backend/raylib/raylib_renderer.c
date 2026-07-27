@@ -1,7 +1,9 @@
 #include "raylib/raylib.h"
+#include "raylib/rlgl.h"
 #include "nodex/backend/abstract/texture.h"
 #include "nodex/backend/raylib/raylib_renderer.h"
 #include "nodex/status/status.h"
+
 
 static Rectangle NodexToRayRect(NxRect rect){
     return (Rectangle){
@@ -66,13 +68,29 @@ static void Raylib_RendererClear(NxColor color) {
     ClearBackground(NodexToRayColor(color));
 }
 
+static void Raylib_RendererDrawFast(const NxTexture* texture, NxRect dest, NxColor tint) {
+    rlSetTexture(((Texture2D*)texture->raw)->id);
+    rlBegin(RL_QUADS);
+        rlColor4ub(tint.r, tint.g, tint.b, tint.a);
+        rlTexCoord2f(0.0f, 0.0f); 
+        rlVertex2f(dest.x, dest.y);
+        rlTexCoord2f(0.0f, 1.0f); 
+        rlVertex2f(dest.x, dest.y + dest.height);
+        rlTexCoord2f(1.0f, 1.0f); 
+        rlVertex2f(dest.x + dest.width, dest.y + dest.height);
+        rlTexCoord2f(1.0f, 0.0f); 
+        rlVertex2f(dest.x + dest.width, dest.y);
+    rlEnd();
+}
+
 static NxRendererDriver rendererDriver = {
     .beginFrame = &Raylib_RendererBeginFrame,
     .clear = &Raylib_RendererClear,
     .draw = &Raylib_RendererDraw,
     .endFrame = &Raylib_RendererEndFrame,
+    .drawFast = &Raylib_RendererDrawFast,
     .init = NULL,
-    .setBlend = NULL
+    .setBlend = NULL,
 };
 
 const NxRendererDriver* Nx_GetRaylibRendererDriver(void) {

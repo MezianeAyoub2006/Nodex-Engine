@@ -18,5 +18,6 @@
 #include "nodex/backend/abstract/backend.h"
 #include "nodex/backend/raylib/raylib_time.h"
 #include "nodex/backend/abstract/time.h"
+#include "nodex/interface/interface.h"
 
 #endif

@@ -42,3 +42,18 @@ void Nx_RendererDraw(
         tint
     );
 }
+
+void Nx_RendererDrawFast(
+    const NxTexture* texture,
+    NxRect dest,
+    NxColor tint
+) {
+    NX_DRIVER_DISPATCH_VOID(
+        internalRendererDriver,
+        drawFast,
+        texture,
+        dest,
+        tint
+    );
+} 
+

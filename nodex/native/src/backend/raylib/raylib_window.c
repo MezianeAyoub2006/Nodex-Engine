@@ -47,12 +47,17 @@ static void Raylib_ToggleFullscreen(NxWindow* window) {
     ToggleFullscreen();
 }
 
+static bool Raylib_ShouldClose() {
+    return WindowShouldClose();
+}
+
 static const NxWindowDriver raylibDriver = {
     .init = &Raylib_WindowInit,
     .setScale = &Raylib_Rescale,
     .setVirtualSize = &Raylib_Rescale,
     .toggleFullscreen = &Raylib_ToggleFullscreen,
-    .setTitle = &Raylib_SetTitle
+    .setTitle = &Raylib_SetTitle,
+    .shouldClose = &Raylib_ShouldClose
 };
 
 const NxWindowDriver* Nx_GetRaylibWindowDriver(void) {

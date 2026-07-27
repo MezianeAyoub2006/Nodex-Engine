@@ -61,3 +61,7 @@ void Nx_WindowToggleFullscreen(void) {
     internalWindow.fullscreen = !internalWindow.fullscreen;
     internalWindowDriver->toggleFullscreen(&internalWindow);
 }
+
+bool Nx_WindowShoudClose(void) {
+    NX_DRIVER_DISPATCH(internalWindowDriver, shouldClose, false);
+}

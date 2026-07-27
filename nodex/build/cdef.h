@@ -1,4 +1,4 @@
-/* Custom definitions def to the pipeline */
+/* Custom definitions to the pipeline */
 
 typedef unsigned char uint8_t;
 
@@ -99,6 +99,7 @@ typedef struct {
     void (*setScale)(NxWindow*);
     void (*setTitle)(NxWindow*);
     void (*toggleFullscreen)(NxWindow*);
+    bool (*shouldClose)(void);
 } NxWindowDriver;
 const NxWindow* Nx_WindowGet(void);
 void Nx_WindowInit(const NxWindowDriver* driver, NxWindow window);
@@ -106,6 +107,7 @@ void Nx_WindowSetVirtualSize(int virtualWidth, int virtualHeight);
 void Nx_WindowSetScale(float scale_X, float scale_Y);
 void Nx_WindowSetTitle(const char* title);
 void Nx_WindowToggleFullscreen(void);
+bool Nx_WindowShoudClose(void);
 typedef enum {
     NX_FORMAT_UNKNOWN = 0,
     NX_FORMAT_R8,
@@ -174,6 +176,7 @@ typedef struct {
     void (*endFrame)(void);
     void (*clear)(NxColor);
     void (*draw)(const NxTexture*, NxRect, NxRect, NxVector2, float, NxColor);
+    void (*drawFast)(const NxTexture*, NxRect, NxColor); 
     void (*setBlend)(NxBlend);
 } NxRendererDriver;
 void Nx_RendererInit(const NxRendererDriver* driver);
@@ -184,6 +187,11 @@ void Nx_RendererDraw(
     const NxTexture* texture,
     NxRect source, NxRect dest,       
     NxVector2 origin, float rotation, 
+    NxColor tint
+);
+void Nx_RendererDrawFast(
+    const NxTexture* texture,
+    NxRect dest,        
     NxColor tint
 );
 void Nx_RendererSetBlend(NxBlend blend);
@@ -282,3 +290,45 @@ void Nx_Init(
     bool vsync, int targetFps,
     const char* title
 );
+// wierd guard name cause scared of wierd shi.
+typedef struct {
+    NxTexture* texture;   
+    NxRect source;        
+    NxRect dest;          
+    NxVector2 origin;     
+    float rotation;       
+    float z_index;
+    NxColor tint;         
+    int arrival_id;       
+} NxDrawTask;
+typedef struct { 
+    NxDrawTask drawTasks[20000]; 
+    int ptr; 
+} NxDrawQueue;
+typedef struct {
+    NxTexture* texture;
+    NxRect dest; 
+    float z_index; 
+    int arrival_id; 
+    NxColor tint; 
+} NxDrawTaskFast; 
+typedef struct {
+    NxDrawTaskFast drawTasks[20000]; 
+    int ptr; 
+} NxDrawQueueFast; 
+typedef struct {
+    bool active[NX_KEY_NUMBER]; 
+    bool pressed[NX_KEY_NUMBER]; 
+    bool released[NX_KEY_NUMBER]; 
+} NxKeyboardState; 
+typedef struct {
+    bool shouldClose;   
+    int fps; 
+    float dt;  
+    NxDrawQueue drawQueue;  
+    NxDrawQueueFast drawQueueFast; 
+    NxKeyboardState keyboardState; 
+    // inserer interface pour python ici
+} NxInterface;
+NxInterface* Nx_GetInterface(void);
+void Nx_Update(void);

@@ -17,13 +17,15 @@ typedef struct {
     void (*setScale)(NxWindow*);
     void (*setTitle)(NxWindow*);
     void (*toggleFullscreen)(NxWindow*);
+    bool (*shouldClose)(void);
 } NxWindowDriver;
-
+ 
 const NxWindow* Nx_WindowGet(void);
 void Nx_WindowInit(const NxWindowDriver* driver, NxWindow window);
 void Nx_WindowSetVirtualSize(int virtualWidth, int virtualHeight);
 void Nx_WindowSetScale(float scale_X, float scale_Y);
 void Nx_WindowSetTitle(const char* title);
 void Nx_WindowToggleFullscreen(void);
+bool Nx_WindowShoudClose(void);
 
 #endif
