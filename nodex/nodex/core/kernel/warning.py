@@ -8,9 +8,10 @@ class Priority(Enum):
     HIGH = auto()
     
 class Warning(Enum):
-    CORE = auto()
+    NATIVE = auto()
     OVERRIDE = auto()
     UNKNOWN = auto()
     RESERVED = auto()
+    
 
     

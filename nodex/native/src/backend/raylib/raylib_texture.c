@@ -18,18 +18,18 @@ static NxTextureFormat RaylibFormatToNodex(int raylibFormat) {
 
 static void Raylib_TextureLoad(NxTexture* out, const char* path) {
     if (!out || !path) {
-        Nx_SetStatus(NX_ERR_NULLPTR, "Texture out pointer or path is NULL");
+        Nx_SetStatus(NX_ERR_NULLPTR, "from \"Raylib_TextureLoad(NxTexture* out, const char* path)\"\n>>>> Texture out pointer or path is NULL.");
         return;
     }
     Texture2D* tex = malloc(sizeof(Texture2D));
     if (!tex) {
-        Nx_SetStatus(NX_ERR_OUT_OF_MEMORY, "Failed to allocate Texture2D");
+        Nx_SetStatus(NX_ERR_OUT_OF_MEMORY, "from \"Raylib_TextureLoad(NxTexture* out, const char* path)\"\n>>>> Failed to allocate Texture2D.");
         return;
     }
     *tex = LoadTexture(path);
     if (tex->id == 0) {
         free(tex);
-        Nx_SetStatus(NX_ERR_INVALID_ARGS, "Failed to load texture from path");
+        Nx_SetStatus(NX_ERR_INVALID_ARGS, "from \"Raylib_TextureLoad(NxTexture* out, const char* path)\"\n>>>> Failed to load texture from path.");
         return;
     }
     out->prop = (NxTextureProp){
@@ -44,11 +44,11 @@ static void Raylib_TextureLoad(NxTexture* out, const char* path) {
 
 static void Raylib_TextureUnload(NxTexture* out) {
     if (!out) {
-        Nx_SetStatus(NX_ERR_NULLPTR, "Texture out pointer is NULL");
+        Nx_SetStatus(NX_ERR_NULLPTR, "from \"Raylib_TextureUnload\"\nTexture out pointer is NULL.");
         return;
     }
     if (!out->raw) {
-        Nx_SetStatus(NX_ERR_NULLPTR, "Texture raw data is NULL");
+        Nx_SetStatus(NX_ERR_NULLPTR, "from \"Raylib_TextureUnload\"\nTexture raw data is NULL.");
         return;
     }
     UnloadTexture(*(Texture2D*)(out->raw));

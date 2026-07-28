@@ -17,6 +17,7 @@ class Context:
         Service.context = self 
 
         self.wrapper = Wrapper(
+            self, 
             virtual_size = virtual_size, 
             window_scale = window_scale,
             target_fps = target_fps,  

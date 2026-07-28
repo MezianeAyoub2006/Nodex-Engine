@@ -1,2 +1,5 @@
 from .core import *
-from .NX_L import *
+from .nxl import *
+
+def compile():
+    pass 

@@ -5,9 +5,12 @@ from .interface import Interface
 class Window:
     def __init__(self, 
         interface : Interface,
-        virtual_size: tuple[int, int], window_scale: tuple[int, int], 
-        vsync: bool, target_fps: int,
-        caption, backend
+        virtual_size: tuple[int, int], 
+        window_scale: tuple[int, int], 
+        vsync: bool, 
+        target_fps: int,
+        caption : str, 
+        backend : Backend
     ):
         cffi.lib.Nx_RegisterBackends()  
         cffi.lib.Nx_Init(
@@ -21,5 +24,5 @@ class Window:
 
     @property
     def should_close(self):
-        return self._interface._interface.shouldClose  
+        return self._interface.ptr.read.flags.shouldClose
 

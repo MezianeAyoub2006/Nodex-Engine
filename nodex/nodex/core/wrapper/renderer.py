@@ -9,11 +9,11 @@ import numpy as np
 
 class Renderer:
     def __init__(self, interface: Interface):
-        interface_ptr = interface._interface
-        self._queue = interface_ptr.drawQueue
-        self._fast_queue = interface_ptr.drawQueueFast
-        self._tasks = self._queue.drawTasks
-        self._fast_tasks = self._fast_queue.drawTasks
+        interface_ptr = interface.ptr
+        self._queue = interface_ptr.write.draw.full 
+        self._fast_queue = interface_ptr.write.draw.fast
+        self._tasks = self._queue.tasks
+        self._fast_tasks = self._fast_queue.tasks
         self._interface_ptr = interface_ptr
 
     def increment(self):

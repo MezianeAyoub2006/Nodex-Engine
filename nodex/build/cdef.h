@@ -300,35 +300,56 @@ typedef struct {
     float z_index;
     NxColor tint;         
     int arrival_id;       
-} NxDrawTask;
-typedef struct { 
-    NxDrawTask drawTasks[20000]; 
-    int ptr; 
-} NxDrawQueue;
+} PyDrawTaskFull; 
 typedef struct {
-    NxTexture* texture;
-    NxRect dest; 
-    float z_index; 
-    int arrival_id; 
-    NxColor tint; 
-} NxDrawTaskFast; 
-typedef struct {    
-    NxDrawTaskFast drawTasks[20000]; 
-    int ptr; 
-} NxDrawQueueFast; 
+    NxTexture* texture;        
+    NxRect dest;               
+    float z_index;
+    NxColor tint;         
+    int arrival_id;       
+} PyDrawTaskFast; 
+typedef struct {
+    struct { 
+        PyDrawTaskFull tasks[20000]; 
+        int ptr; 
+    } full;  
+    struct {    
+        PyDrawTaskFast tasks[20000]; 
+        int ptr; 
+    } fast; 
+} PyDraw; 
 typedef struct {
     bool active[NX_KEY_NUMBER]; 
     bool pressed[NX_KEY_NUMBER]; 
     bool released[NX_KEY_NUMBER]; 
-} NxKeyboardState; 
+} PyKeyboardRead; 
 typedef struct {
-    bool shouldClose;   
-    int fps; 
-    float dt;  
-    NxDrawQueue drawQueue;  
-    NxDrawQueueFast drawQueueFast; 
-    NxKeyboardState keyboardState; 
-    NxStatus lastStatus;   
-} NxInterface;
-NxInterface* Nx_GetInterface(void);
+    NxKey keys[NX_KEY_NUMBER]; 
+    int ptr; 
+} PyKeyboardRequested; 
+typedef struct {
+    struct {
+        PyKeyboardRead keyboard; 
+        struct {
+            bool shouldClose; 
+        } flags;
+        struct {
+            int fps; 
+            float dt; 
+        } time;
+        struct {
+            NxStatus last;
+            const char* message;
+        } status; 
+    } read; 
+    struct {
+        PyDraw draw; 
+        PyKeyboardRequested keys; 
+        struct {
+            bool statusConsumed; 
+        } flags;
+    } write;
+} PyInterface; 
+PyInterface* Nx_GetInterface(void); 
 void Nx_Update(void);
+bool Nx_FormatStatus(char* buff_out, size_t buff_size, NxStatus status);
