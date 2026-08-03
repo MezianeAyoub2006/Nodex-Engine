@@ -1,3 +1,4 @@
+
 def filter_header(header: str) -> str:
     lignes = header.splitlines()
     output = []

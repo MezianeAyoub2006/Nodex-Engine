@@ -1,46 +1,46 @@
-from .runtime import Runtime 
-from .service import Service
-from .event_bus import EventBus
-from ..node import Node
-from ..wrapper import Backend, Wrapper
+from ..bridge import Cffi, Interface, extract
+from ..bridge.backend import Window
+from ..bridge.backend import Renderer
+from ..bridge.backend import Texture
+from .runtime import Runtime
+
 
 class Context:
     def __init__(self, 
-        virtual_size: tuple[int, int], 
-        window_scale : tuple[int, int] = (1, 1), 
-        vsync: bool = True, 
-        target_fps = 10000, 
-        caption: str = "Hello World", 
-        backend = Backend.RAYLIB   
-        
-    ) -> None:
-        Service.context = self 
-
-        self.wrapper = Wrapper(
-            self, 
-            virtual_size = virtual_size, 
-            window_scale = window_scale,
-            target_fps = target_fps,  
-            vsync = vsync, 
-            caption = caption, 
-            backend = backend
+            virtual_size: tuple[int, int],
+            scale : tuple[float, float], 
+            flags : int, 
+            target_fps: int, 
+            caption: str
+        ):
+        self.cffi = Cffi() 
+        self.window = Window(self, 
+            virtual_size, 
+            scale, 
+            flags, 
+            target_fps, 
+            caption
         )
+        self._interface = Interface(self.cffi)
+        self.window._assign_ptr()
+        self.runtime = Runtime(self)
+        self.renderer = Renderer(self) 
 
-        self._runtime = Runtime(self)
-        self.events = EventBus(self)
-        self.root = Node(self)
+    @property 
+    def dt(self):
+        return self._interface.dt 
 
     @property
-    def dt(self):
-        return self.wrapper.interface.dt 
-
-    @property     
     def fps(self):
-        return self.wrapper.interface.dt  
+        return self._interface.fps 
 
-    def run(self):
-        return self._runtime.run()
-    
-    def warning(self, type, message, priority: int):
-        pass
+    @property
+    def timer(self):
+        return self._interface.timer 
+
+    def run(self): 
+        return self.runtime.run()
+
+    def extract(self, element):
+        return extract(self.cffi, element)
 

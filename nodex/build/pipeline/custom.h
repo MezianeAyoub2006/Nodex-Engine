@@ -1,7 +1,7 @@
 /* Custom definitions to the pipeline */
 
 typedef unsigned char uint8_t;
-
+typedef unsigned int uint32_t;
 typedef enum {
     LOG_ALL = 0,        
     LOG_TRACE,          

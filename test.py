@@ -1,13 +1,26 @@
 import nodex 
 import random
-import time
 
-W, H = 1280, 720
+ctx = nodex.Context(
+    virtual_size = (500, 500),
+    scale = (1, 1),
+    flags = 0, 
+    target_fps = 300, 
+    caption = "Hello World"
+)
 
-ctx = nodex.Context((W, H), (1, 1), True, 1000)  
+tex = nodex.Texture("bird.png") 
 
-tex = nodex.Texture("nodex.png")
+x = 0    
+t = 0 
 
 @ctx.run()
 def loop():
-   ctx.wrapper.renderer.draw_fast(tex, nodex.Rect(0, 0, tex.width, tex.height), nodex.Color(255, 255, 255, 255), 0)
+    global x, t
+    for i in range(5000):
+        ctx.renderer.draw_simple(tex, random.randint(0, 480), random.randint(0, 480))
+    x += 100 * ctx.dt 
+    t += ctx.dt 
+    if t > 1:
+        print(ctx.fps)
+        t = 0

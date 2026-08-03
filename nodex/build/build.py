@@ -1,3 +1,4 @@
+import sys
 from cffi import FFI
 from pathlib import Path
 from pipeline import expand_includes, filter_header, pipeline_end
@@ -10,7 +11,7 @@ SRC = NATIVE_ROOT / "src"
 
 ffibuilder = FFI()
 
-include_directories = [ str(INCLUDE)] + [ 
+include_directories = [str(INCLUDE)] + [ 
     str(path) 
     for path in INCLUDE.rglob("*") 
     if path.is_dir() 
@@ -21,16 +22,19 @@ source_files = [
     for path in SRC.rglob("*.c") 
 ]
 
+extra_args = ["/Zc:preprocessor"] if sys.platform == "win32" else []
+
 ffibuilder.set_source(
     "_ndx_cffi",
     """
     #include "raylib.h"
-    #include "nodex.h"  
+    #include "nodex.h"      
     """,
     sources=source_files,
-    libraries = ["raylib"],
-    library_dirs = [str(PROJECT_ROOT / "libs")],
-    include_dirs = include_directories,
+    libraries=["raylib"],
+    library_dirs=[str(PROJECT_ROOT / "libs")],
+    include_dirs=include_directories,
+    extra_compile_args=extra_args,
 )
 
 if __name__ == "__main__":
@@ -38,5 +42,3 @@ if __name__ == "__main__":
     Path(PROJECT_ROOT / "cdef.h").write_text(pipeline_end(filter_header(file)), encoding="utf-8") 
     ffibuilder.cdef((PROJECT_ROOT / "cdef.h").read_text(encoding="utf-8"))
     ffibuilder.compile(verbose=True, tmpdir=str(PROJECT_ROOT / "output"))
-
-
