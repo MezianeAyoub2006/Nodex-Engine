@@ -8,3 +8,5 @@
 #include "nodex/colors.h"
 #include "nodex/rendering/rendering.h"
 #include "nodex/bridge/bridge.h"
+#include "nodex/key.h" 
+

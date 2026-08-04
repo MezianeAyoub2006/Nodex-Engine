@@ -5,12 +5,14 @@
 #include "nodex/drivers/window.h"
 #include "nodex/rendering/rendering.h"
 #include "nodex/bridge/interface/time.h"
+#include "nodex/bridge/interface/keyboard_interface.h" 
 
 typedef struct {
     bool should_close; 
     NxWindow* window;
     NxInterface_Status* status; 
     NxRenderingQueue* rendering_queue;
+    NxInterface_Keyboard* keyboard; 
     NxInterface_Time time;  
 } NxInterface; 
 

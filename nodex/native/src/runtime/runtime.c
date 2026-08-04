@@ -15,6 +15,7 @@ void Nx_Init(
     const NxWindowDriver* window_driver,
     const NxRendererDriver* renderer_driver,  
     const NxTextureDriver* texture_driver,
+    const NxKeyboardDriver* keyboard_driver, 
     float (*get_dt)(void)
 ) {
     #if defined(NX_DEBUG) && defined(NX_PERF)
@@ -38,12 +39,14 @@ void Nx_Init(
     ); 
     Nx_Renderer_Init(renderer_driver);
     Nx_Texture_Init(texture_driver);
+    Nx_Keyboard_Init(keyboard_driver); 
     Nx_Dt_Init(get_dt);      
     Nx_Interface_Init();
 }
 
 void Nx_Update(void) {
     NxInterface* interface = Nx_Interface_Get();
+    Nx_Interface_Keyboard_Update(); 
     Nx_Renderer_BeginFrame(); 
     Nx_Interface_Update();  
     Nx_Renderer_EndFrame(); 

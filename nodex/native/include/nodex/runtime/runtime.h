@@ -12,6 +12,7 @@ void Nx_Init(
     const NxWindowDriver* window_driver,
     const NxRendererDriver* renderer_driver,  
     const NxTextureDriver* texture_driver,
+    const NxKeyboardDriver* keyboard_driver, 
     float (*get_dt)(void)
 );
 

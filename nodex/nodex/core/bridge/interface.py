@@ -8,6 +8,7 @@ class Interface:
         self._window = self.ptr.window 
         self._rendering_queue = self.ptr.rendering_queue
         self._should_close = False
+        self._keyboard = self.ptr.keyboard
 
     def update(self):
         self._dt = self.ptr.time.dt 
@@ -42,3 +43,7 @@ class Interface:
     @property
     def status(self):
         return self._status
+
+    @property
+    def keyboard(self):
+        return self._keyboard

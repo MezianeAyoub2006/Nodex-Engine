@@ -111,7 +111,8 @@ typedef struct {
 typedef enum {
     NX_DRIVER_RENDERER, 
     NX_DRIVER_TEXTURE,
-    NX_DRIVER_WINDOW
+    NX_DRIVER_WINDOW,
+    NX_DRIVER_KEYBOARD 
 } NxDriverType; 
 typedef struct {
     void* raw; 
@@ -196,9 +197,109 @@ void Nx_Window_SetTargetFps(int target_fps);
 void Nx_Window_SetCaption(const char* caption); 
 void Nx_ToggleFullscreen(void); 
 bool Nx_Window_ShouldClose(void); 
+typedef enum {
+    NX_KEY_NULL,
+    NX_KEY_ZERO,
+    NX_KEY_ONE,
+    NX_KEY_TWO,
+    NX_KEY_THREE,
+    NX_KEY_FOUR,
+    NX_KEY_FIVE,
+    NX_KEY_SIX,
+    NX_KEY_SEVEN,
+    NX_KEY_EIGHT,
+    NX_KEY_NINE,
+    NX_KEY_A,
+    NX_KEY_B,
+    NX_KEY_C,
+    NX_KEY_D,
+    NX_KEY_E,
+    NX_KEY_F,
+    NX_KEY_G,
+    NX_KEY_H,
+    NX_KEY_I,
+    NX_KEY_J,
+    NX_KEY_K,
+    NX_KEY_L,
+    NX_KEY_M,
+    NX_KEY_N,
+    NX_KEY_O,
+    NX_KEY_P,
+    NX_KEY_Q,
+    NX_KEY_R,
+    NX_KEY_S,
+    NX_KEY_T,
+    NX_KEY_U,
+    NX_KEY_V,
+    NX_KEY_W,
+    NX_KEY_X,
+    NX_KEY_Y,
+    NX_KEY_Z,
+    NX_KEY_UP,
+    NX_KEY_DOWN,
+    NX_KEY_LEFT,
+    NX_KEY_RIGHT,
+    NX_KEY_SPACE,
+    NX_KEY_ENTER,
+    NX_KEY_ESCAPE,
+    NX_KEY_TAB,
+    NX_KEY_BACKSPACE,
+    NX_KEY_INSERT,
+    NX_KEY_DELETE,
+    NX_KEY_HOME,
+    NX_KEY_END,
+    NX_KEY_PAGE_UP,
+    NX_KEY_PAGE_DOWN,
+    NX_KEY_F1,
+    NX_KEY_F2,
+    NX_KEY_F3,
+    NX_KEY_F4,
+    NX_KEY_F5,
+    NX_KEY_F6,
+    NX_KEY_F7,
+    NX_KEY_F8,
+    NX_KEY_F9,
+    NX_KEY_F10,
+    NX_KEY_F11,
+    NX_KEY_F12,
+    NX_KEY_LEFT_SHIFT,
+    NX_KEY_RIGHT_SHIFT,
+    NX_KEY_LEFT_CONTROL,
+    NX_KEY_RIGHT_CONTROL,
+    NX_KEY_LEFT_ALT,
+    NX_KEY_RIGHT_ALT,
+    NX_KEY_LEFT_SUPER,
+    NX_KEY_RIGHT_SUPER,
+    NX_KEY_CAPS_LOCK,
+    NX_KEY_SCROLL_LOCK,
+    NX_KEY_NUM_LOCK,
+    NX_KEY_APOSTROPHE,
+    NX_KEY_COMMA,
+    NX_KEY_MINUS,
+    NX_KEY_PERIOD,
+    NX_KEY_SLASH,
+    NX_KEY_SEMICOLON,
+    NX_KEY_EQUAL,
+    NX_KEY_LEFT_BRACKET,
+    NX_KEY_BACKSLASH,
+    NX_KEY_RIGHT_BRACKET,
+    NX_KEY_GRAVE,
+    NX_KEY_NUMBER
+} NxKey;
+typedef struct NxKeyboardDriver {    
+    NxDriverType type;
+    bool (*get_pressed)(NxKey); 
+    bool (*get_active)(NxKey); 
+    bool (*get_released)(NxKey);  
+} NxKeyboardDriver;   
+void Nx_Keyboard_Init(const NxKeyboardDriver* driver); 
+bool Nx_Keyboard_GetPressed(NxKey key); 
+bool Nx_Keyboard_GetActive(NxKey key); 
+bool Nx_Keyboard_GetReleased(NxKey key); 
 const NxRendererDriver* Raylib_RendererDriver(void); 
 const NxTextureDriver* Raylib_TextureDriver(void); 
 const NxWindowDriver* Raylib_WindowDriver(void); 
+const NxKeyboardDriver* Raylib_KeyboardDriver(void); 
 float Raylib_Get_Dt(void); 
 void Nx_Dt_Init(float (*get_dt)(void));
 float Nx_Get_Dt(void); 
@@ -211,6 +312,7 @@ void Nx_Init(
     const NxWindowDriver* window_driver,
     const NxRendererDriver* renderer_driver,  
     const NxTextureDriver* texture_driver,
+    const NxKeyboardDriver* keyboard_driver, 
     float (*get_dt)(void)
 );
 void Nx_Update(void); 
@@ -271,10 +373,20 @@ typedef struct {
     double timer; 
 } NxInterface_Time; 
 typedef struct {
+    NxKey requested_keys[256]; 
+    bool pressed_keys[256]; 
+    bool active_keys[256]; 
+    bool released_keys[256];
+    uint32_t count; 
+} NxInterface_Keyboard;
+NxInterface_Keyboard* Nx_Interface_Keyboard_Get(void); 
+void Nx_Interface_Keyboard_Update(void);
+typedef struct {
     bool should_close; 
     NxWindow* window;
     NxInterface_Status* status; 
     NxRenderingQueue* rendering_queue;
+    NxInterface_Keyboard* keyboard; 
     NxInterface_Time time;  
 } NxInterface; 
 void Nx_Interface_Init(void); 

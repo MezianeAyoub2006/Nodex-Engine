@@ -1,7 +1,8 @@
 from ..bridge import Cffi, Interface, extract
 from ..bridge.backend import Window
 from ..bridge.backend import Renderer
-from ..bridge.backend import Texture
+from ..bridge.backend import Keyboard
+from ..bridge import check_native_error
 from .runtime import Runtime
 
 
@@ -21,10 +22,12 @@ class Context:
             target_fps, 
             caption
         )
+        check_native_error()
         self._interface = Interface(self.cffi)
         self.window._assign_ptr()
         self.runtime = Runtime(self)
         self.renderer = Renderer(self) 
+        self.keyboard = Keyboard(self)
 
     @property 
     def dt(self):

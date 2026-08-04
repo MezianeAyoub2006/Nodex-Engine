@@ -3,6 +3,7 @@
 #include "nodex/drivers/renderer.h"
 #include "nodex/drivers/texture.h"
 #include "nodex/drivers/window.h"
+#include "nodex/drivers/keyboard.h"
 #include "nodex/drivers/ray/ray.h"
 
 void Nx_Dt_Init(float (*get_dt)(void));

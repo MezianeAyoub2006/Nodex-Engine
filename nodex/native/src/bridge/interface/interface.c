@@ -4,6 +4,7 @@
 #include "nodex/status/status.h"
 #include "nodex/drivers/drivers.h"
 #include "nodex/colors.h"
+#include "nodex/bridge/interface/keyboard_interface.h"
 
 NxInterface interface; 
 
@@ -16,6 +17,7 @@ void Nx_Interface_Init(void) {
     interface.should_close = false; 
     interface.rendering_queue = Nx_RenderingQueue_Get();
     interface.time.interval = 0.2f; 
+    interface.keyboard = Nx_Interface_Keyboard_Get(); 
 }
 
 static float interval_timer = 0.0f; 

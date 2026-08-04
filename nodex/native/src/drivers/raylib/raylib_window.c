@@ -2,6 +2,7 @@
 
 #include "raylib/raylib.h"
 #include "nodex/drivers/ray/ray_window.h"
+#include "nodex/drivers/ray/ray_renderer.h"
 #include "nodex/status/status.h"
 #include "../macros.h"
 #include "nodex/system/platform.h"
@@ -52,6 +53,7 @@ static void Raylib_Window_Init(NxWindow* window) {
         window->caption
     );
 
+    Raylib_Renderer_SetVirtualSize(window->virtual_size);
 
     if (vsync && (window->target_fps > Raylib_Refresh_Rate())) {
         WARN_TARGET_FPS;
@@ -93,6 +95,7 @@ static void Raylib_Window_SetTargetFps(NxWindow* window) {
 
 static void Raylib_Window_SetVirtualSize(NxWindow* window) {
     Raylib_Window_Rescale(window);
+    Raylib_Renderer_SetVirtualSize(window->virtual_size);
 }
 
 static void Raylib_Window_ToggleFullscreen(NxWindow* window) {

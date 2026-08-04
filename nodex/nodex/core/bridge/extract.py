@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from .cffi import Cffi
+if TYPE_CHECKING: from .cffi import Cffi
     
 from ...dtypes import Vec2
 

@@ -10,6 +10,7 @@ class Runtime:
         def wrapper(f):
             while not self.context._interface.should_close:
                 self.context._interface.update()
+                self.context.keyboard._update()
                 f()  
                 self.context.cffi.lib.Nx_Update()
         return wrapper

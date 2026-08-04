@@ -1,6 +1,9 @@
+#include <math.h>
 #include "raylib/raylib.h"
 #include "nodex/drivers/ray/ray_renderer.h"
 #include "../macros.h"
+
+static RenderTexture2D target;
 
 static Vector2 Ray_Vector2(NxVec2 vec2) {
     return (Vector2){
@@ -27,12 +30,49 @@ static Color Ray_Color(NxColor color) {
     }; 
 }
 
+void Raylib_Renderer_SetVirtualSize(NxVec2 virtual_size) {
+    if (target.id != 0) UnloadRenderTexture(target);
+    target = LoadRenderTexture((int)virtual_size.x, (int)virtual_size.y);
+    SetTextureFilter(target.texture, TEXTURE_FILTER_POINT); // pixel art: pas de flou au scale
+}
+
 static void Raylib_Renderer_BeginFrame(void) {
-    BeginDrawing();  
+    BeginTextureMode(target);
 }
 
 static void Raylib_Renderer_EndFrame(void) {
-    EndDrawing();   
+    EndTextureMode();
+
+    int screen_w = GetScreenWidth();
+    int screen_h = GetScreenHeight();
+
+    float virtual_w = (float)target.texture.width;
+    float virtual_h = (float)target.texture.height;
+
+    float scale = fminf(
+        (float)screen_w / virtual_w,
+        (float)screen_h / virtual_h
+    );
+
+    float dst_w = virtual_w * scale;
+    float dst_h = virtual_h * scale;
+
+    Rectangle src = (Rectangle){
+        0.0f, 0.0f,
+        virtual_w,
+        -virtual_h 
+    };
+    Rectangle dst = (Rectangle){
+        (screen_w - dst_w) * 0.5f,
+        (screen_h - dst_h) * 0.5f,
+        dst_w,
+        dst_h
+    };
+
+    BeginDrawing();
+    ClearBackground(BLACK); 
+    DrawTexturePro(target.texture, src, dst, (Vector2){0, 0}, 0.0f, WHITE);
+    EndDrawing();
 }
 
 static void Raylib_Renderer_Clear(NxColor color) {
