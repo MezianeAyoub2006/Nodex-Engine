@@ -28,7 +28,7 @@ class Renderer:
             task.order = 0
             q.count = idx + 1
 
-        def draw(texture, x, y, rotation=0, scale=1):
+        def draw(texture, x, y, rotation = 0, scale = 1):
             idx = q.count
             task = tasks[idx]
             task.type = TASK_NORMAL
@@ -41,30 +41,38 @@ class Renderer:
             task.order = 0
             q.count = idx + 1
 
-        def draw_full(texture, source, dest, origin_x, origin_y, rotation, color):
+        def draw_full(
+            texture, 
+            source_x: float, source_y: float, source_w: float, source_h: float, 
+            dest_x: float, dest_y: float, dest_w: float, dest_h: float, 
+            origin_x: float, origin_y: float, 
+            rotation: float, 
+            color_r: float, color_g: float, color_b: float, color_a: float
+        ):
             idx = q.count
             task = tasks[idx]
             task.type = TASK_FULL
             t = task.full
             t.texture = texture._ptr
 
-            t.source_x = source.x
-            t.source_y = source.y
-            t.source_w = source.w
-            t.source_h = source.h
+            # Assigne directement les valeurs (plus besoin d'accéder aux propriétés des objets)
+            t.source_x = source_x
+            t.source_y = source_y
+            t.source_w = source_w
+            t.source_h = source_h
 
-            t.dest_x = dest.x
-            t.dest_y = dest.y
-            t.dest_w = dest.w
-            t.dest_h = dest.h
+            t.dest_x = dest_x
+            t.dest_y = dest_y
+            t.dest_w = dest_w
+            t.dest_h = dest_h
 
             t.origin_x = origin_x
             t.origin_y = origin_y
 
-            t.tint_r = color.r
-            t.tint_g = color.g
-            t.tint_b = color.b
-            t.tint_a = color.a
+            t.tint_r = color_r
+            t.tint_g = color_g
+            t.tint_b = color_b
+            t.tint_a = color_a
 
             t.rotation = rotation
             task.order = 0

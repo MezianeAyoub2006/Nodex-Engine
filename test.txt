@@ -1,8 +1,0 @@
-
-strict<int> update(strict<x>: int, y: int)
-    return x + y    
-
-
-class Point {
-    construct()
-}

@@ -18,6 +18,7 @@ void Nx_Interface_Init(void) {
     interface.rendering_queue = Nx_RenderingQueue_Get();
     interface.time.interval = 0.2f; 
     interface.keyboard = Nx_Interface_Keyboard_Get(); 
+    interface.window = Nx_Window_Get();
 }
 
 static float interval_timer = 0.0f; 

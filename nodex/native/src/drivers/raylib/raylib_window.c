@@ -99,6 +99,7 @@ static void Raylib_Window_SetVirtualSize(NxWindow* window) {
 }
 
 static void Raylib_Window_ToggleFullscreen(NxWindow* window) {
+    window->fullscreen = !window->fullscreen;
     if (!IsWindowState(FLAG_WINDOW_UNDECORATED)) {
         int monitor = GetCurrentMonitor();
         int mw = GetMonitorWidth(monitor);

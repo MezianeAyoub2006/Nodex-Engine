@@ -177,7 +177,9 @@ typedef struct {
     NxVec2 scale;
     int flags; 
     int target_fps; 
-    const char* caption;
+    const char* caption; 
+    bool stretch;
+    bool fullscreen; 
 } NxWindow; 
 typedef struct {
     NxDriverType type; 

@@ -1,6 +1,7 @@
 #include <math.h>
 #include "raylib/raylib.h"
 #include "nodex/drivers/ray/ray_renderer.h"
+#include "nodex/drivers/window.h"
 #include "../macros.h"
 
 static RenderTexture2D target;
@@ -31,9 +32,10 @@ static Color Ray_Color(NxColor color) {
 }
 
 void Raylib_Renderer_SetVirtualSize(NxVec2 virtual_size) {
-    if (target.id != 0) UnloadRenderTexture(target);
+    if (target.id != 0) 
+        UnloadRenderTexture(target);
     target = LoadRenderTexture((int)virtual_size.x, (int)virtual_size.y);
-    SetTextureFilter(target.texture, TEXTURE_FILTER_POINT); // pixel art: pas de flou au scale
+    SetTextureFilter(target.texture, TEXTURE_FILTER_POINT);
 }
 
 static void Raylib_Renderer_BeginFrame(void) {
@@ -42,7 +44,7 @@ static void Raylib_Renderer_BeginFrame(void) {
 
 static void Raylib_Renderer_EndFrame(void) {
     EndTextureMode();
-
+    NxWindow* window =  Nx_Window_Get(); 
     int screen_w = GetScreenWidth();
     int screen_h = GetScreenHeight();
 
@@ -54,14 +56,23 @@ static void Raylib_Renderer_EndFrame(void) {
         (float)screen_h / virtual_h
     );
 
-    float dst_w = virtual_w * scale;
-    float dst_h = virtual_h * scale;
+    float scale_ratio = (window->stretch) ? (window->scale.x / window->scale.y) : 1; 
+    float dst_w, dst_h; 
+    if ((window->fullscreen) || (scale_ratio > 1)){
+        dst_w = virtual_w * scale * scale_ratio;
+        dst_h = virtual_h * scale; 
+    } else {
+        dst_w = virtual_w * scale;
+        dst_h = virtual_h * scale / scale_ratio; 
+    }
+  
 
     Rectangle src = (Rectangle){
         0.0f, 0.0f,
         virtual_w,
         -virtual_h 
     };
+
     Rectangle dst = (Rectangle){
         (screen_w - dst_w) * 0.5f,
         (screen_h - dst_h) * 0.5f,

@@ -11,7 +11,9 @@ typedef struct {
     NxVec2 scale;
     int flags; 
     int target_fps; 
-    const char* caption;
+    const char* caption; 
+    bool stretch;
+    bool fullscreen; 
 } NxWindow; 
 
 typedef struct {
@@ -33,6 +35,7 @@ void Nx_Window_SetTargetFps(int target_fps);
 void Nx_Window_SetCaption(const char* caption); 
 void Nx_ToggleFullscreen(void); 
 bool Nx_Window_ShouldClose(void); 
+
 
 
 

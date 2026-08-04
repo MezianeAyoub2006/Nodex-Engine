@@ -35,6 +35,8 @@ void Nx_Init(
             .target_fps = target_fps,
             .flags = flags, 
             .caption = caption,
+            .fullscreen = false,
+            .stretch = false
         } 
     ); 
     Nx_Renderer_Init(renderer_driver);
